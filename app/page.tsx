@@ -13,17 +13,48 @@ import { books, imageLibrary, projects, type Book } from "./portfolio-data";
 const heroCards = [
   { src: imageLibrary.blue, alt: "Blue editorial portrait", className: "hero-card--one" },
   { src: imageLibrary.concrete, alt: "Brutalist concrete study", className: "hero-card--two" },
-  { src: imageLibrary.desertGold, alt: "Figures on a desert ridge", className: "hero-card--three" },
+  { src: imageLibrary.motion, alt: "Bali moving-image study", className: "hero-card--three" },
 ];
 
 type HeroOffset = { x: number; y: number; rotate: number };
 type LightboxState = { project: number; image: number } | null;
 
+const isVideo = (src: string) => /\.(mp4|webm|ogg)(?:[?#].*)?$/i.test(src);
+
+function PortfolioMedia({
+  src,
+  alt,
+  controls = false,
+  draggable,
+}: {
+  src: string;
+  alt: string;
+  controls?: boolean;
+  draggable?: boolean;
+}) {
+  if (isVideo(src)) {
+    return (
+      <video
+        src={src}
+        aria-label={alt}
+        controls={controls}
+        autoPlay={!controls}
+        muted={!controls}
+        loop={!controls}
+        playsInline
+        preload="metadata"
+      />
+    );
+  }
+
+  return <img src={src} alt={alt} draggable={draggable} />;
+}
+
 function BookPage({ page, side }: { page: Book["pages"][number]["left"]; side: "left" | "right" }) {
   return (
     <div className={`book-page book-page--${side}`}>
       {page.image ? (
-        <img src={page.image} alt={page.label ?? "Photobook page"} />
+        <PortfolioMedia src={page.image} alt={page.label ?? "Photobook page"} controls />
       ) : (
         <div className="book-page-copy">
           <small>{page.label}</small>
@@ -241,7 +272,7 @@ export default function Home() {
                 } as CSSProperties
               }
             >
-              <img src={card.src} alt={card.alt} draggable="false" />
+              <PortfolioMedia src={card.src} alt={card.alt} draggable={false} />
               <span>0{index + 1}</span>
             </button>
           ))}
@@ -292,8 +323,8 @@ export default function Home() {
                 onClick={() => setLightbox({ project: projectIndex, image: 0 })}
                 aria-label={`Open ${project.title} series`}
               >
-                <img src={project.images[0]} alt={`${project.title}, ${project.kind}`} />
-                <span className="view-tag">View series ↗</span>
+                <PortfolioMedia src={project.images[0]} alt={`${project.title}, ${project.kind}`} />
+                <span className="view-tag">{isVideo(project.images[0]) ? "Play video" : "View series"} ↗</span>
               </button>
               <div className="project-meta">
                 <span>0{projectIndex + 1}</span>
@@ -327,7 +358,7 @@ export default function Home() {
               ))}
             </div>
             <figure className="index-preview">
-              <img
+              <PortfolioMedia
                 key={projects[indexHover].images[1]}
                 src={projects[indexHover].images[1]}
                 alt={`${projects[indexHover].title} preview`}
@@ -353,7 +384,7 @@ export default function Home() {
             <button className="book-object" type="button" key={book.title} onClick={() => openBook(index)}>
               <span className="book-spine" style={{ background: book.accent }} />
               <span className="book-cover">
-                <img src={book.cover} alt="" />
+                <PortfolioMedia src={book.cover} alt={`${book.title} cover`} />
                 <span className="book-cover-shade" />
                 <strong>{book.title}</strong>
                 <small>{book.subtitle}</small>
@@ -411,7 +442,11 @@ export default function Home() {
             ←
           </button>
           <figure className="lightbox-figure" key={activeProject.images[lightbox.image]}>
-            <img src={activeProject.images[lightbox.image]} alt={`${activeProject.title} image ${lightbox.image + 1}`} />
+            <PortfolioMedia
+              src={activeProject.images[lightbox.image]}
+              alt={`${activeProject.title} media ${lightbox.image + 1}`}
+              controls
+            />
             <figcaption>{activeProject.note}</figcaption>
           </figure>
           <button className="lightbox-nav lightbox-nav--next" type="button" onClick={() => changeLightbox(1)} aria-label="Next image">

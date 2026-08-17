@@ -1,19 +1,22 @@
 /**
- * IMAGE SWAP GUIDE
- * Replace files in /public/images and keep these filenames, or edit the paths below.
- * The same image library drives the hero, projects, lightbox and both books.
+ * PHOTO / VIDEO SWAP GUIDE
+ * 1. Put photos in /public/images and videos in /public/videos.
+ * 2. Keep an existing filename to replace it everywhere, or edit a path below.
+ * 3. .mp4, .webm and .ogg paths are detected automatically as video.
+ * Example: bali: "/images/巴厘岛.mp4" or bali: "/videos/bali-island.mp4"
+ * The same media library drives the hero, projects, lightbox and both books.
  */
 export const imageLibrary = {
-  blue: "/images/blue-portrait.jpg",
-  concrete: "/images/concrete.jpg",
-  desertGold: "/images/desert-gold.jpg",
-  desertWhite: "/images/desert-white.jpg",
-  motion: "/images/motion.jpg",
-  shadow: "/images/shadow.jpg",
-  portraitSoft: "/images/portrait-soft.jpg",
-  portraitOrange: "/images/portrait-orange.jpg",
-  mountain: "/images/mountain.jpg",
-  sea: "/images/sea.jpg",
+  blue: "/images/1.jpg",
+  concrete: "/images/2.jpg",
+  desertGold: "/images/3.jpg",
+  desertWhite: "/images/4.jpg",
+  motion: "/images/巴厘岛.mp4",
+  shadow: "/images/5.jpg",
+  portraitSoft: "/images/2.jpg",
+  portraitOrange: "/images/3.jpg",
+  mountain: "/images/4.jpg",
+  sea: "/images/5.jpg",
 } as const;
 
 export type Project = {
@@ -56,7 +59,7 @@ export const projects: Project[] = [
     year: "2023—25",
     note: "A moving portrait is allowed to remain unresolved.",
     color: "#cd5637",
-    images: [imageLibrary.portraitOrange, imageLibrary.motion, imageLibrary.blue],
+    images: [imageLibrary.motion, imageLibrary.portraitOrange, imageLibrary.blue],
   },
 ];
 
