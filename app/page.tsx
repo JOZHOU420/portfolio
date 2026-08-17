@@ -385,8 +385,8 @@ export default function Home() {
             </div>
             <figure className="index-preview">
               <PortfolioMedia
-                key={projects[indexHover].images[0]}
-                src={projects[indexHover].images[0]}
+                key={projects[indexHover].images[1] ?? projects[indexHover].images[0]}
+                src={projects[indexHover].images[1] ?? projects[indexHover].images[0]}
                 alt={`${projects[indexHover].title} preview`}
               />
               <figcaption>{projects[indexHover].note}</figcaption>
