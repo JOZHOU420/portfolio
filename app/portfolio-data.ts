@@ -24,10 +24,10 @@ export const mediaGroups = {
   downByTheSea: {
     folder: "01｜含海量过高",
     items: [
+      mediaPath("01｜含海量过高", "FM1.jpg"),
       mediaPath("01｜含海量过高", "01-cover.jpg"),
       mediaPath("01｜含海量过高", "02-portrait.jpg"),
       mediaPath("01｜含海量过高", "03-cover.jpg"),
-      mediaPath("01｜含海量过高", "FM1.jpg"),
       mediaPath("01｜含海量过高", "05-landscape.jpg"),
       mediaPath("01｜含海量过高", "微信图片_2026-08-17_231657_509.jpg"),
       mediaPath("01｜含海量过高", "微信图片_2026-08-17_231705_297.jpg"),
@@ -38,10 +38,10 @@ export const mediaGroups = {
   rainforest: {
     folder: "02｜绿得很具体",
     items: [
+      mediaPath("02｜绿得很具体", "FM2.jpg"),
       mediaPath("02｜绿得很具体", "微信图片_2026-08-17_231730_879.jpg"),
       mediaPath("02｜绿得很具体", "微信图片_2026-08-17_231759_531.jpg"),
       mediaPath("02｜绿得很具体", "微信图片_2026-08-17_231807_055.jpg"),
-      mediaPath("02｜绿得很具体", "FM2.jpg"),
       mediaPath("02｜绿得很具体", "微信图片_2026-08-17_235918_846.jpg"),
       mediaPath("02｜绿得很具体", "微信图片_2026-08-17_235924_179.jpg"),
       mediaPath("02｜绿得很具体", "微信图片_2026-08-17_235928_560.jpg"),
@@ -52,8 +52,8 @@ export const mediaGroups = {
   graduation: {
     folder: "03｜从小岛毕业",
     items: [
+      mediaPath("03｜从小岛毕业", "FM3.jpg"),
       mediaPath("03｜从小岛毕业", "微信图片_2026-08-18_000905_443.jpg"),
-      mediaPath("03｜从小岛毕业", "微信图片_2026-08-18_000911_809.jpg"),
       mediaPath("03｜从小岛毕业", "微信图片_20260818000856_25_2.jpg"),
       mediaPath("03｜从小岛毕业", "微信图片_20260818000858_27_2.jpg"),
       mediaPath("03｜从小岛毕业", "微信图片_20260818000859_28_2.jpg"),
@@ -64,7 +64,7 @@ export const mediaGroups = {
   mountain: {
     folder: "04｜人已在山里",
     items: [
-      mediaPath("04｜人已在山里", "微信图片_20260818001820_36_2.jpg"),
+      mediaPath("04｜人已在山里", "FM4.jpg"),
       mediaPath("04｜人已在山里", "微信图片_20260818001821_37_2.jpg"),
       mediaPath("04｜人已在山里", "微信图片_20260818001822_38_2.jpg"),
       mediaPath("04｜人已在山里", "微信图片_20260818001826_41_2.jpg"),
@@ -78,13 +78,13 @@ export const mediaGroups = {
   teamwork: {
     folder: "05｜一些组队行为",
     items: [
+      mediaPath("05｜一些组队行为", "FM5.jpg"),
       mediaPath("05｜一些组队行为", "微信图片_2026-08-18_002227_637.jpg"),
       mediaPath("05｜一些组队行为", "微信图片_2026-08-18_002259_686.jpg"),
       mediaPath("05｜一些组队行为", "微信图片_20260818002616_48_2.jpg"),
       mediaPath("05｜一些组队行为", "微信图片_20260818002617_49_2.jpg"),
       mediaPath("05｜一些组队行为", "微信图片_20260818002618_50_2.jpg"),
       mediaPath("05｜一些组队行为", "微信图片_20260818002623_52_2.jpg"),
-      mediaPath("05｜一些组队行为", "微信图片_20260818002624_53_2.jpg"),
       mediaPath("05｜一些组队行为", "微信图片_20260818002626_55_2.jpg"),
       mediaPath("05｜一些组队行为", "微信图片_20260818002627_56_2.jpg"),
       mediaPath("05｜一些组队行为", "微信图片_20260818002628_57_2.jpg"),
