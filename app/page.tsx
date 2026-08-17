@@ -18,10 +18,13 @@ import {
 } from "./portfolio-data";
 
 const heroCards = [
-  { src: mediaGroups.downByTheSea.items[0], alt: "下海那会", className: "hero-card--one" },
-  { src: mediaGroups.graduation.items[0], alt: "毕业那会", className: "hero-card--two" },
-  { src: mediaGroups.teamwork.items[0], alt: "Teamwork", className: "hero-card--three" },
+  { src: mediaGroups.homeCover.items[0], alt: "含海量过高动态封面", className: "hero-card--one", emoji: "🐠" },
+  { src: mediaGroups.graduation.items[0], alt: "从小岛毕业", className: "hero-card--two", emoji: "🎓" },
+  { src: mediaGroups.teamwork.items[0], alt: "一些组队行为", className: "hero-card--three", emoji: "🎁" },
 ];
+
+const projectCursorEmojis = ["🐠", "🌴", "🎓", "🦶🏻", "🎁"] as const;
+const bookCursorEmoji = "🖐🏻";
 
 type HeroOffset = { x: number; y: number; rotate: number };
 type LightboxState = { project: number; image: number } | null;
@@ -76,6 +79,8 @@ export default function Home() {
   const [activeBook, setActiveBook] = useState<number | null>(null);
   const [spread, setSpread] = useState(0);
   const [turnDirection, setTurnDirection] = useState<"next" | "prev">("next");
+  const [galleryDirection, setGalleryDirection] = useState<"next" | "prev">("next");
+  const [cursorSticker, setCursorSticker] = useState("");
   const [resumeOpen, setResumeOpen] = useState(false);
   const [indexHover, setIndexHover] = useState(0);
   const dragRef = useRef<{
@@ -104,10 +109,12 @@ export default function Home() {
         setLightbox(null);
         setActiveBook(null);
         setResumeOpen(false);
+        setCursorSticker("");
         return;
       }
 
       if (lightbox && event.key === "ArrowRight") {
+        setGalleryDirection("next");
         setLightbox((current) => {
           if (!current) return null;
           const total = projects[current.project].images.length;
@@ -116,6 +123,7 @@ export default function Home() {
       }
 
       if (lightbox && event.key === "ArrowLeft") {
+        setGalleryDirection("prev");
         setLightbox((current) => {
           if (!current) return null;
           const total = projects[current.project].images.length;
@@ -198,6 +206,7 @@ export default function Home() {
   };
 
   const changeLightbox = (direction: 1 | -1) => {
+    setGalleryDirection(direction === 1 ? "next" : "prev");
     setLightbox((current) => {
       if (!current) return null;
       const total = projects[current.project].images.length;
@@ -205,10 +214,27 @@ export default function Home() {
     });
   };
 
+  const openProject = (project: number, image = 0) => {
+    setGalleryDirection("next");
+    setCursorSticker(projectCursorEmojis[project]);
+    setLightbox({ project, image });
+  };
+
+  const closeProject = () => {
+    setLightbox(null);
+    setCursorSticker("");
+  };
+
   const openBook = (index: number) => {
     setActiveBook(index);
     setSpread(0);
     setTurnDirection("next");
+    setCursorSticker(bookCursorEmoji);
+  };
+
+  const closeBook = () => {
+    setActiveBook(null);
+    setCursorSticker("");
   };
 
   const turnBook = (direction: "next" | "prev") => {
@@ -225,7 +251,13 @@ export default function Home() {
 
   return (
     <main onPointerMove={moveCursor}>
-      <div className="cursor-dot" ref={cursorRef} aria-hidden="true" />
+      <div
+        className={`cursor-dot${cursorSticker ? " cursor-dot--sticker" : ""}`}
+        ref={cursorRef}
+        aria-hidden="true"
+      >
+        {cursorSticker}
+      </div>
 
       <header className="site-header">
         <a className="wordmark" href="#top" aria-label="Raina portfolio home">
@@ -263,6 +295,8 @@ export default function Home() {
               onPointerMove={moveHero}
               onPointerUp={endHeroDrag}
               onPointerCancel={endHeroDrag}
+              onPointerEnter={() => setCursorSticker(card.emoji)}
+              onPointerLeave={() => setCursorSticker("")}
               onKeyDown={(event) => nudgeHero(event, index)}
               style={
                 {
@@ -316,11 +350,15 @@ export default function Home() {
               className={`project-card project-card--${projectIndex + 1}`}
               key={project.title}
               style={{ "--card-color": project.color } as CSSProperties}
+              onPointerEnter={() => setCursorSticker(projectCursorEmojis[projectIndex])}
+              onPointerLeave={() => {
+                if (!lightbox) setCursorSticker("");
+              }}
             >
               <button
                 className="project-image"
                 type="button"
-                onClick={() => setLightbox({ project: projectIndex, image: 0 })}
+                onClick={() => openProject(projectIndex)}
                 aria-label={`Open ${project.title} series`}
               >
                 <PortfolioMedia src={project.images[0]} alt={`${project.title}, ${project.kind}`} />
@@ -346,9 +384,13 @@ export default function Home() {
                 <button
                   type="button"
                   key={project.title}
-                  onMouseEnter={() => setIndexHover(projectIndex)}
+                  onMouseEnter={() => {
+                    setIndexHover(projectIndex);
+                    setCursorSticker(projectCursorEmojis[projectIndex]);
+                  }}
+                  onMouseLeave={() => setCursorSticker("")}
                   onFocus={() => setIndexHover(projectIndex)}
-                  onClick={() => setLightbox({ project: projectIndex, image: 0 })}
+                  onClick={() => openProject(projectIndex)}
                 >
                   <span>0{projectIndex + 1}</span>
                   <strong>{project.title}</strong>
@@ -381,14 +423,20 @@ export default function Home() {
         </div>
         <div className="book-shelf">
           {books.map((book, index) => (
-            <button className="book-object" type="button" key={book.title} onClick={() => openBook(index)}>
+            <button
+              className="book-object"
+              type="button"
+              key={book.title}
+              onClick={() => openBook(index)}
+              onPointerEnter={() => setCursorSticker(bookCursorEmoji)}
+              onPointerLeave={() => {
+                if (activeBook === null) setCursorSticker("");
+              }}
+              aria-label={`Open ${book.title}`}
+            >
               <span className="book-spine" style={{ background: book.accent }} />
               <span className="book-cover">
                 <PortfolioMedia src={book.cover} alt={`${book.title} cover`} />
-                <span className="book-cover-shade" />
-                <strong>{book.title}</strong>
-                <small>{book.subtitle}</small>
-                <i>Open book ↗</i>
               </span>
             </button>
           ))}
@@ -425,7 +473,13 @@ export default function Home() {
       </footer>
 
       {lightbox && activeProject && (
-        <div className="overlay lightbox" role="dialog" aria-modal="true" aria-label={`${activeProject.title} gallery`}>
+        <div
+          className="overlay lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${activeProject.title} gallery`}
+          onPointerEnter={() => setCursorSticker(projectCursorEmojis[lightbox.project])}
+        >
           <div className="overlay-topbar">
             <div>
               <strong>{activeProject.title}</strong>
@@ -434,14 +488,17 @@ export default function Home() {
             <p>
               {String(lightbox.image + 1).padStart(2, "0")} / {String(activeProject.images.length).padStart(2, "0")}
             </p>
-            <button type="button" onClick={() => setLightbox(null)} aria-label="Close gallery">
+            <button type="button" onClick={closeProject} aria-label="Close gallery">
               Close ×
             </button>
           </div>
           <button className="lightbox-nav lightbox-nav--prev" type="button" onClick={() => changeLightbox(-1)} aria-label="Previous image">
             ←
           </button>
-          <figure className="lightbox-figure" key={activeProject.images[lightbox.image]}>
+          <figure
+            className={`lightbox-figure lightbox-figure--project-${lightbox.project + 1} lightbox-figure--${galleryDirection} lightbox-figure--variant-${lightbox.image % 3}`}
+            key={`${activeProject.images[lightbox.image]}-${galleryDirection}`}
+          >
             <PortfolioMedia
               src={activeProject.images[lightbox.image]}
               alt={`${activeProject.title} media ${lightbox.image + 1}`}
@@ -456,7 +513,13 @@ export default function Home() {
       )}
 
       {currentBook && activeBook !== null && (
-        <div className="overlay book-reader" role="dialog" aria-modal="true" aria-label={`${currentBook.title} reader`}>
+        <div
+          className="overlay book-reader"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${currentBook.title} reader`}
+          onPointerEnter={() => setCursorSticker(bookCursorEmoji)}
+        >
           <div className="overlay-topbar overlay-topbar--light">
             <div>
               <strong>{currentBook.title}</strong>
@@ -465,7 +528,7 @@ export default function Home() {
             <p>
               Page {String(spread + 1).padStart(2, "0")} / {String(currentBook.pages.length).padStart(2, "0")}
             </p>
-            <button type="button" onClick={() => setActiveBook(null)} aria-label="Close book">
+            <button type="button" onClick={closeBook} aria-label="Close book">
               Close ×
             </button>
           </div>
