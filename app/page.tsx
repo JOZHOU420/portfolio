@@ -19,8 +19,10 @@ import {
 
 const heroCards = [
   { src: mediaGroups.homeCover.items[0], alt: "含海量过高动态封面", className: "hero-card--one", emoji: "🐠" },
-  { src: mediaGroups.graduation.items[0], alt: "从小岛毕业", className: "hero-card--two", emoji: "🎓" },
-  { src: mediaGroups.teamwork.items[0], alt: "一些组队行为", className: "hero-card--three", emoji: "🎁" },
+  { src: mediaGroups.homeCover.items[1], alt: "绿得很具体", className: "hero-card--two", emoji: "🌴" },
+  { src: mediaGroups.homeCover.items[2], alt: "从小岛毕业", className: "hero-card--three", emoji: "🎓" },
+  { src: mediaGroups.homeCover.items[3], alt: "人已在山里", className: "hero-card--four", emoji: "🦶🏻" },
+  { src: mediaGroups.homeCover.items[4], alt: "一些组队行为", className: "hero-card--five", emoji: "🎁" },
 ];
 
 const projectCursorEmojis = ["🐠", "🌴", "🎓", "🦶🏻", "🎁"] as const;
@@ -74,6 +76,8 @@ export default function Home() {
     { x: 0, y: 0, rotate: -7 },
     { x: 0, y: 0, rotate: 3 },
     { x: 0, y: 0, rotate: 8 },
+    { x: 0, y: 0, rotate: -4 },
+    { x: 0, y: 0, rotate: 5 },
   ]);
   const [lightbox, setLightbox] = useState<LightboxState>(null);
   const [activeBook, setActiveBook] = useState<number | null>(null);
@@ -317,7 +321,7 @@ export default function Home() {
           </button>
         </div>
 
-        <span className="hero-index">01—03 / Drag to compose</span>
+        <span className="hero-index">01—05 / Drag to compose</span>
         <a className="scroll-cue" href="#work">
           Scroll to explore <span aria-hidden="true">↓</span>
         </a>

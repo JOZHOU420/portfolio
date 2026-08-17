@@ -13,7 +13,13 @@ const pageSequence = (folder: string, count: number) =>
 export const mediaGroups = {
   homeCover: {
     folder: "首页封面",
-    items: [mediaPath("首页封面", "bad4f7137812d61fd2c60f2a47d011f2_raw.mp4")],
+    items: [
+      mediaPath("首页封面", "bad4f7137812d61fd2c60f2a47d011f2_raw.mp4"),
+      mediaPath("首页封面", "微信图片_2026-08-17_231759_531.jpg"),
+      mediaPath("首页封面", "微信图片_2026-08-18_000905_443.jpg"),
+      mediaPath("首页封面", "微信图片_20260818001832_46_2.jpg"),
+      mediaPath("首页封面", "微信图片_20260818002624_53_2.jpg"),
+    ],
   },
   downByTheSea: {
     folder: "01｜含海量过高",

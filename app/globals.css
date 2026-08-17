@@ -281,6 +281,20 @@ img {
   height: min(20vw, 300px);
 }
 
+.hero-card--four {
+  left: 27vw;
+  top: 71%;
+  width: min(17vw, 255px);
+  height: min(12vw, 180px);
+}
+
+.hero-card--five {
+  right: 21vw;
+  top: 69%;
+  width: min(15vw, 225px);
+  height: min(19vw, 285px);
+}
+
 .shuffle-note {
   position: absolute;
   z-index: 14;
@@ -1301,6 +1315,8 @@ footer div {
   .hero-card--one { left: 3vw; top: 58%; width: 35vw; height: 48vw; }
   .hero-card--two { left: 33%; top: 49%; width: 48vw; height: 63vw; }
   .hero-card--three { right: -9vw; top: 68%; width: 39vw; height: 31vw; }
+  .hero-card--four { left: 8vw; top: 79%; width: 33vw; height: 24vw; }
+  .hero-card--five { right: 9vw; top: 78%; width: 28vw; height: 36vw; }
   .shuffle-note { display: none; }
   .hero-intro { left: 16px; bottom: 25px; width: 64vw; }
   .hero-index { right: 16px; bottom: 25px; width: 100px; text-align: right; }
