@@ -8,12 +8,12 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
   type PointerEvent as ReactPointerEvent,
 } from "react";
-import { books, imageLibrary, projects, type Book } from "./portfolio-data";
+import { books, mediaGroups, projects, type Book } from "./portfolio-data";
 
 const heroCards = [
-  { src: imageLibrary.blue, alt: "Blue editorial portrait", className: "hero-card--one" },
-  { src: imageLibrary.concrete, alt: "Brutalist concrete study", className: "hero-card--two" },
-  { src: imageLibrary.motion, alt: "Bali moving-image study", className: "hero-card--three" },
+  { src: mediaGroups.blueStatic.items[0], alt: "Blue Static cover", className: "hero-card--one" },
+  { src: mediaGroups.betweenVolumes.items[0], alt: "Between Volumes cover", className: "hero-card--two" },
+  { src: mediaGroups.softSignal.items[0], alt: "Soft Signal moving-image cover", className: "hero-card--three" },
 ];
 
 type HeroOffset = { x: number; y: number; rotate: number };
@@ -359,8 +359,8 @@ export default function Home() {
             </div>
             <figure className="index-preview">
               <PortfolioMedia
-                key={projects[indexHover].images[1]}
-                src={projects[indexHover].images[1]}
+                key={projects[indexHover].images[1] ?? projects[indexHover].images[0]}
+                src={projects[indexHover].images[1] ?? projects[indexHover].images[0]}
                 alt={`${projects[indexHover].title} preview`}
               />
               <figcaption>{projects[indexHover].note}</figcaption>

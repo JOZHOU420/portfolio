@@ -1,39 +1,47 @@
-# 图片与视频替换指南
+# 分组素材替换指南
 
-## 最简单：原位替换
+所有图片与视频现在都在 `public/media` 中，并按项目分组：
 
-把新文件放进 `public/images`，并使用现有文件名覆盖旧文件。页面中所有引用会一起更新，不用改代码。
+| 文件夹 | 对应页面内容 |
+| --- | --- |
+| `01-blue-static` | Blue Static 项目 |
+| `02-between-volumes` | Between Volumes 项目 |
+| `03-after-the-heat` | After the Heat 项目 |
+| `04-soft-signal` | Soft Signal 视频项目 |
+| `05-book-field-notes` | 第一本作品册 Field Notes 01 |
+| `06-book-distance-volume` | 第二本作品册 Distance, Volume |
 
-## 使用新文件名
+## 原位替换
 
-1. 图片放入 `public/images`，例如 `public/images/new-cover.jpg`。
-2. 视频建议放入 `public/videos`，例如 `public/videos/showreel.mp4`。
-3. 打开 `app/portfolio-data.ts`，将对应路径改成：
+进入某个项目文件夹，用同名文件覆盖旧文件即可。例如：
+
+- 替换 Blue Static 封面：覆盖 `public/media/01-blue-static/01-cover.jpg`。
+- 替换 Soft Signal 视频：覆盖 `public/media/04-soft-signal/01-cover.mp4`。
+
+同名覆盖时不需要修改代码。替换完成后需要重新发布，线上网站才会更新。
+
+## 给一组增加更多素材
+
+1. 把新文件放进对应项目文件夹。
+2. 打开 `app/portfolio-data.ts`。
+3. 在该组的 `items` 中增加路径，顺序就是网站里的浏览顺序。
 
 ```ts
-cover: "/images/new-cover.jpg"
+blueStatic: {
+  folder: "/media/01-blue-static",
+  items: [
+    "/media/01-blue-static/01-cover.jpg",
+    "/media/01-blue-static/02-portrait.jpg",
+    "/media/01-blue-static/03-detail.mp4",
+  ],
+},
 ```
 
-或：
-
-```ts
-images: ["/videos/showreel.mp4", "/images/1.jpg", "/images/2.jpg"]
-```
-
-系统会根据扩展名自动区分图片和视频。你当前放在 `public/images/巴厘岛.mp4` 的视频也可以直接写成：
-
-```ts
-images: ["/images/巴厘岛.mp4"]
-```
+每个项目组的第一个素材是项目封面。系统会根据扩展名自动识别 `.mp4`、`.webm` 和 `.ogg` 视频。
 
 ## 视频建议
 
-- 首选 `.mp4`：H.264 视频编码 + AAC 音频编码。
-- 也支持 `.webm` 和 `.ogg`。
-- 不建议直接使用 `.mov`，因为部分浏览器无法播放。
-- 项目卡和首屏会静音循环播放；打开全屏后会显示播放、暂停、音量和进度控制。
-- 建议单条视频控制在 30–50 MB 以内，页面打开会更快。
-
-## 修改项目名称和顺序
-
-`app/portfolio-data.ts` 中的 `projects` 数组控制项目名称、类型、年份、说明以及每个项目的素材顺序。`images` 数组里的第一个素材会作为项目封面。
+- 首选 MP4：H.264 视频编码 + AAC 音频编码。
+- 项目封面会静音循环播放，全屏打开后有完整播放控制。
+- 不建议直接使用 MOV。
+- 单条视频建议控制在 30–50 MB 以内。
