@@ -53,10 +53,11 @@ export const mediaGroups = {
     folder: "03｜从小岛毕业",
     items: [
       mediaPath("03｜从小岛毕业", "FM3.jpg"),
+      mediaPath("03｜从小岛毕业", "图1.jpg"),
+      mediaPath("03｜从小岛毕业", "图2.jpg"),
       mediaPath("03｜从小岛毕业", "微信图片_2026-08-18_000905_443.jpg"),
       mediaPath("03｜从小岛毕业", "微信图片_20260818000856_25_2.jpg"),
       mediaPath("03｜从小岛毕业", "微信图片_20260818000858_27_2.jpg"),
-      mediaPath("03｜从小岛毕业", "微信图片_20260818000859_28_2.jpg"),
       mediaPath("03｜从小岛毕业", "微信图片_20260818001253_33_2.jpg"),
       mediaPath("03｜从小岛毕业", "微信图片_20260818001533_35_2.png"),
     ],
@@ -136,7 +137,7 @@ export const projects: Project[] = [
   {
     title: "从小岛毕业",
     kind: "毕业季 / 视觉记录",
-    year: "2026",
+    year: "2025",
     note: "关于告别、庆祝与新阶段的明亮记录。",
     color: "#e89942",
     images: mediaGroups.graduation.items,
@@ -144,7 +145,7 @@ export const projects: Project[] = [
   {
     title: "人已在山里",
     kind: "山野 / 纪实风景",
-    year: "2026",
+    year: "2025",
     note: "在山海之间观察尺度、天气与人的位置。",
     color: "#687665",
     images: mediaGroups.mountain.items,
@@ -152,7 +153,7 @@ export const projects: Project[] = [
   {
     title: "一些组队行为",
     kind: "合作 / 现场记录",
-    year: "2026",
+    year: "2025",
     note: "共同创作发生时，人物、空间与细节自然形成的现场档案。",
     color: "#cd5637",
     images: mediaGroups.teamwork.items,

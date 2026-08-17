@@ -18,16 +18,15 @@ import {
 } from "./portfolio-data";
 
 const heroCards = [
-  { src: mediaGroups.homeCover.items[0], alt: "含海量过高动态封面", className: "hero-card--one", kind: "video", emoji: "🐠" },
-  { src: mediaGroups.homeCover.items[1], alt: "绿得很具体人物贴纸", className: "hero-card--two", kind: "sticker", emoji: "🌴" },
-  { src: mediaGroups.homeCover.items[2], alt: "从小岛毕业小熊贴纸", className: "hero-card--three", kind: "sticker", emoji: "🎓" },
-  { src: mediaGroups.homeCover.items[3], alt: "人已在山里人物贴纸", className: "hero-card--four", kind: "sticker", emoji: "🦶🏻" },
-  { src: mediaGroups.homeCover.items[4], alt: "一些组队行为静态封面", className: "hero-card--five", kind: "square", emoji: "🎁" },
+  { src: mediaGroups.homeCover.items[0], alt: "含海量过高动态封面", className: "hero-card--one", kind: "video" },
+  { src: mediaGroups.homeCover.items[1], alt: "绿得很具体人物贴纸", className: "hero-card--two", kind: "sticker" },
+  { src: mediaGroups.homeCover.items[2], alt: "从小岛毕业小熊贴纸", className: "hero-card--three", kind: "sticker" },
+  { src: mediaGroups.homeCover.items[3], alt: "人已在山里人物贴纸", className: "hero-card--four", kind: "sticker" },
+  { src: mediaGroups.homeCover.items[4], alt: "一些组队行为静态封面", className: "hero-card--five", kind: "square" },
 ];
 
-const projectCursorEmojis = ["🐠", "🌴", "🎓", "🦶🏻", "🎁"] as const;
-const bookCursorEmoji = "🖐🏻";
 const carouselSlots = [-2, -1, 0, 1, 2] as const;
+const bookTurnDuration = 680;
 
 type HeroOffset = { x: number; y: number; rotate: number };
 type LightboxState = { project: number; image: number } | null;
@@ -91,8 +90,8 @@ export default function Home() {
   const [spread, setSpread] = useState(0);
   const [previousSpread, setPreviousSpread] = useState(0);
   const [turnDirection, setTurnDirection] = useState<"next" | "prev">("next");
+  const [bookTurning, setBookTurning] = useState(false);
   const [galleryDirection, setGalleryDirection] = useState<"next" | "prev">("next");
-  const [cursorSticker, setCursorSticker] = useState("");
   const [resumeOpen, setResumeOpen] = useState(false);
   const [indexHover, setIndexHover] = useState(0);
   const dragRef = useRef<{
@@ -105,6 +104,8 @@ export default function Home() {
   } | null>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
   const bookSwipeStart = useRef<number | null>(null);
+  const bookTurningRef = useRef(false);
+  const bookTurnTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const hasOverlay = Boolean(lightbox) || activeBook !== null || resumeOpen;
 
@@ -115,13 +116,19 @@ export default function Home() {
     };
   }, [hasOverlay]);
 
+  useEffect(
+    () => () => {
+      if (bookTurnTimer.current) clearTimeout(bookTurnTimer.current);
+    },
+    [],
+  );
+
   useEffect(() => {
     const onKeyDown = (event: globalThis.KeyboardEvent) => {
       if (event.key === "Escape") {
         setLightbox(null);
         setActiveBook(null);
         setResumeOpen(false);
-        setCursorSticker("");
         return;
       }
 
@@ -228,36 +235,46 @@ export default function Home() {
 
   const openProject = (project: number, image = 0) => {
     setGalleryDirection("next");
-    setCursorSticker(projectCursorEmojis[project]);
     setLightbox({ project, image });
   };
 
   const closeProject = () => {
     setLightbox(null);
-    setCursorSticker("");
   };
 
   const openBook = (index: number) => {
+    if (bookTurnTimer.current) clearTimeout(bookTurnTimer.current);
+    bookTurningRef.current = false;
+    setBookTurning(false);
     setActiveBook(index);
     setSpread(0);
     setPreviousSpread(0);
     setTurnDirection("next");
-    setCursorSticker(bookCursorEmoji);
   };
 
   const closeBook = () => {
+    if (bookTurnTimer.current) clearTimeout(bookTurnTimer.current);
+    bookTurningRef.current = false;
+    setBookTurning(false);
     setActiveBook(null);
-    setCursorSticker("");
   };
 
   const turnBook = (direction: "next" | "prev") => {
-    if (activeBook === null) return;
-    setTurnDirection(direction);
+    if (activeBook === null || bookTurningRef.current) return;
     const last = books[activeBook].pages.length - 1;
     const next = direction === "next" ? Math.min(last, spread + 1) : Math.max(0, spread - 1);
     if (next === spread) return;
+    bookTurningRef.current = true;
+    setBookTurning(true);
+    setTurnDirection(direction);
     setPreviousSpread(spread);
     setSpread(next);
+    bookTurnTimer.current = setTimeout(() => {
+      bookTurningRef.current = false;
+      setPreviousSpread(next);
+      setBookTurning(false);
+      bookTurnTimer.current = null;
+    }, bookTurnDuration);
   };
 
   const activeProject = lightbox ? projects[lightbox.project] : null;
@@ -265,17 +282,11 @@ export default function Home() {
 
   return (
     <main onPointerMove={moveCursor}>
-      <div
-        className={`cursor-dot${cursorSticker ? " cursor-dot--sticker" : ""}`}
-        ref={cursorRef}
-        aria-hidden="true"
-      >
-        {cursorSticker}
-      </div>
+      <div className="cursor-dot" ref={cursorRef} aria-hidden="true" />
 
       <header className="site-header">
         <a className="wordmark" href="#top" aria-label="Raina portfolio home">
-          RAINA®
+          周小雨 / RAINA®
         </a>
         <nav aria-label="Primary navigation">
           <a href="#work">Selected work</a>
@@ -309,8 +320,6 @@ export default function Home() {
               onPointerMove={moveHero}
               onPointerUp={endHeroDrag}
               onPointerCancel={endHeroDrag}
-              onPointerEnter={() => setCursorSticker(card.emoji)}
-              onPointerLeave={() => setCursorSticker("")}
               onKeyDown={(event) => nudgeHero(event, index)}
               style={
                 {
@@ -354,31 +363,30 @@ export default function Home() {
       <section className="work-section" id="work" aria-labelledby="work-title">
         <div className="project-index project-index--lead" aria-label="Project index">
           <p className="section-label">INDEX / HOVER TO PREVIEW</p>
+          <p className="index-intro">五组摄影作品，记录五个从日常生活里拾起的片段。</p>
           <div className="index-layout">
             <div className="index-list">
               {projects.map((project, projectIndex) => (
-                <button
-                  type="button"
+                <div
+                  className="index-row"
                   key={project.title}
                   onMouseEnter={() => {
                     setIndexHover(projectIndex);
-                    setCursorSticker(projectCursorEmojis[projectIndex]);
                   }}
-                  onMouseLeave={() => setCursorSticker("")}
                   onFocus={() => setIndexHover(projectIndex)}
-                  onClick={() => openProject(projectIndex)}
+                  tabIndex={0}
                 >
                   <span>0{projectIndex + 1}</span>
                   <strong>{project.title}</strong>
                   <span>{project.kind}</span>
-                  <span>{project.year} ↗</span>
-                </button>
+                  <span>{project.year}</span>
+                </div>
               ))}
             </div>
             <figure className="index-preview">
               <PortfolioMedia
-                key={projects[indexHover].images[1] ?? projects[indexHover].images[0]}
-                src={projects[indexHover].images[1] ?? projects[indexHover].images[0]}
+                key={projects[indexHover].images[0]}
+                src={projects[indexHover].images[0]}
                 alt={`${projects[indexHover].title} preview`}
               />
               <figcaption>{projects[indexHover].note}</figcaption>
@@ -398,10 +406,6 @@ export default function Home() {
               className={`project-card project-card--${projectIndex + 1}`}
               key={project.title}
               style={{ "--card-color": project.color } as CSSProperties}
-              onPointerEnter={() => setCursorSticker(projectCursorEmojis[projectIndex])}
-              onPointerLeave={() => {
-                if (!lightbox) setCursorSticker("");
-              }}
             >
               <button
                 className="project-image"
@@ -430,11 +434,11 @@ export default function Home() {
         <div className="books-heading">
           <p className="section-label">Printed matter — 03</p>
           <h2 id="books-title">
-            Two books.
+            Portfolio
             <br />
-            Made to be opened.
+            过往设计作品集
           </h2>
-          <p>选择一本作品集，点击页面左右两侧或左右滑动，像翻阅实体书一样浏览。</p>
+          <p>收录过往的视觉与环境设计项目，欢迎选择一本，随意翻翻。</p>
         </div>
         <div className="book-shelf">
           {books.map((book, index) => (
@@ -443,10 +447,6 @@ export default function Home() {
               type="button"
               key={book.title}
               onClick={() => openBook(index)}
-              onPointerEnter={() => setCursorSticker(bookCursorEmoji)}
-              onPointerLeave={() => {
-                if (activeBook === null) setCursorSticker("");
-              }}
               aria-label={`Open ${book.title}`}
             >
               <span className="book-cover">
@@ -492,7 +492,6 @@ export default function Home() {
           role="dialog"
           aria-modal="true"
           aria-label={`${activeProject.title} gallery`}
-          onPointerEnter={() => setCursorSticker(projectCursorEmojis[lightbox.project])}
         >
           <div className="overlay-topbar">
             <div>
@@ -550,7 +549,6 @@ export default function Home() {
           role="dialog"
           aria-modal="true"
           aria-label={`${currentBook.title} reader`}
-          onPointerEnter={() => setCursorSticker(bookCursorEmoji)}
         >
           <div className="overlay-topbar overlay-topbar--light">
             <div>
@@ -581,40 +579,40 @@ export default function Home() {
               className="reader-hit reader-hit--left"
               type="button"
               onClick={() => turnBook("prev")}
-              disabled={spread === 0}
+              disabled={spread === 0 || bookTurning}
               aria-label="Previous spread"
             />
             <div className="open-book">
               <div className="book-under-page" aria-hidden="true">
-                <BookPage page={currentBook.pages[previousSpread]} />
+                <BookPage page={currentBook.pages[spread]} />
               </div>
-              <div
-                className={`book-turning-sheet book-turning-sheet--${turnDirection}`}
-                key={`${activeBook}-${spread}-${turnDirection}`}
-              >
-                <div className="book-sheet-face book-sheet-face--front">
-                  <BookPage page={currentBook.pages[previousSpread]} />
+              {previousSpread !== spread && (
+                <div
+                  className={`book-turning-sheet book-turning-sheet--${turnDirection}`}
+                  key={`${activeBook}-${spread}-${turnDirection}`}
+                >
+                  <div className="book-sheet-face book-sheet-face--front">
+                    <BookPage page={currentBook.pages[previousSpread]} />
+                  </div>
+                  <div className="book-sheet-face book-sheet-face--back" aria-hidden="true" />
                 </div>
-                <div className="book-sheet-face book-sheet-face--back">
-                  <BookPage page={currentBook.pages[spread]} />
-                </div>
-              </div>
+              )}
               <span className="book-page-edge" aria-hidden="true" />
             </div>
             <button
               className="reader-hit reader-hit--right"
               type="button"
               onClick={() => turnBook("next")}
-              disabled={spread === currentBook.pages.length - 1}
+              disabled={spread === currentBook.pages.length - 1 || bookTurning}
               aria-label="Next spread"
             />
           </div>
           <div className="reader-controls">
-            <button type="button" onClick={() => turnBook("prev")} disabled={spread === 0}>
+            <button type="button" onClick={() => turnBook("prev")} disabled={spread === 0 || bookTurning}>
               ← 上一页
             </button>
             <p>点击页面左右两侧 · 左右滑动 · 或使用方向键</p>
-            <button type="button" onClick={() => turnBook("next")} disabled={spread === currentBook.pages.length - 1}>
+            <button type="button" onClick={() => turnBook("next")} disabled={spread === currentBook.pages.length - 1 || bookTurning}>
               下一页 →
             </button>
           </div>
