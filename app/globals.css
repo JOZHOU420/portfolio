@@ -260,39 +260,72 @@ img {
   letter-spacing: 0.1em;
 }
 
+.hero-card--sticker {
+  overflow: visible;
+  background: transparent;
+  box-shadow: none;
+}
+
+.hero-card--sticker:active {
+  box-shadow: none;
+}
+
+.hero-card--sticker img {
+  object-fit: contain;
+  filter: drop-shadow(0 18px 18px rgb(0 0 0 / 0.2));
+  transition: filter 240ms ease;
+}
+
+.hero-card--sticker:hover img {
+  filter: drop-shadow(0 25px 24px rgb(0 0 0 / 0.25));
+}
+
+.hero-card--sticker span {
+  right: 4%;
+  bottom: 5%;
+  border-radius: 50%;
+}
+
+.hero-card--video,
+.hero-card--square {
+  border: 7px solid #fff;
+  box-shadow: 0 20px 52px rgb(0 0 0 / 0.2);
+}
+
 .hero-card--one {
   left: 5vw;
-  top: 52%;
-  width: min(20vw, 310px);
-  height: min(27vw, 400px);
+  top: 55%;
+  width: min(19vw, 285px);
+  height: min(11vw, 165px);
 }
 
 .hero-card--two {
-  left: 45%;
-  top: 45%;
-  width: min(27vw, 410px);
-  height: min(34vw, 510px);
+  left: 39%;
+  top: 43%;
+  width: min(20vw, 310px);
+  height: min(31vw, 475px);
 }
 
 .hero-card--three {
-  right: -2vw;
-  top: 39%;
-  width: min(25vw, 380px);
-  height: min(20vw, 300px);
+  right: 1vw;
+  top: 45%;
+  width: min(18vw, 275px);
+  height: min(24vw, 370px);
 }
 
 .hero-card--four {
-  left: 27vw;
-  top: 71%;
-  width: min(17vw, 255px);
-  height: min(12vw, 180px);
+  left: 20vw;
+  top: 67%;
+  width: min(21vw, 325px);
+  height: min(27vw, 415px);
 }
 
 .hero-card--five {
-  right: 21vw;
-  top: 69%;
+  right: 20vw;
+  top: 72%;
   width: min(15vw, 225px);
-  height: min(19vw, 285px);
+  aspect-ratio: 1;
+  height: auto;
 }
 
 .shuffle-note {
@@ -1312,11 +1345,11 @@ footer div {
   .eyebrow { top: 82px; right: auto; left: 16px; }
   .hero h1 { font-size: 17.6vw; line-height: 0.84; }
   .hero h1 span { margin-left: 0; }
-  .hero-card--one { left: 3vw; top: 58%; width: 35vw; height: 48vw; }
-  .hero-card--two { left: 33%; top: 49%; width: 48vw; height: 63vw; }
-  .hero-card--three { right: -9vw; top: 68%; width: 39vw; height: 31vw; }
-  .hero-card--four { left: 8vw; top: 79%; width: 33vw; height: 24vw; }
-  .hero-card--five { right: 9vw; top: 78%; width: 28vw; height: 36vw; }
+  .hero-card--one { left: 3vw; top: 61%; width: 36vw; height: 21vw; }
+  .hero-card--two { left: 30%; top: 47%; width: 43vw; height: 64vw; }
+  .hero-card--three { right: -4vw; top: 67%; width: 35vw; height: 46vw; }
+  .hero-card--four { left: 5vw; top: 77%; width: 42vw; height: 54vw; }
+  .hero-card--five { right: 12vw; top: 81%; width: 29vw; height: auto; }
   .shuffle-note { display: none; }
   .hero-intro { left: 16px; bottom: 25px; width: 64vw; }
   .hero-index { right: 16px; bottom: 25px; width: 100px; text-align: right; }

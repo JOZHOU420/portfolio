@@ -15,9 +15,9 @@ export const mediaGroups = {
     folder: "首页封面",
     items: [
       mediaPath("首页封面", "1.mp4"),
-      mediaPath("首页封面", "2.jpg"),
-      mediaPath("首页封面", "3.jpg"),
-      mediaPath("首页封面", "4.jpg"),
+      mediaPath("首页封面", "2-sticker.png"),
+      mediaPath("首页封面", "3-sticker.png"),
+      mediaPath("首页封面", "4-sticker.png"),
       mediaPath("首页封面", "5.jpg"),
     ],
   },

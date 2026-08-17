@@ -18,11 +18,11 @@ import {
 } from "./portfolio-data";
 
 const heroCards = [
-  { src: mediaGroups.homeCover.items[0], alt: "含海量过高动态封面", className: "hero-card--one", emoji: "🐠" },
-  { src: mediaGroups.homeCover.items[1], alt: "绿得很具体", className: "hero-card--two", emoji: "🌴" },
-  { src: mediaGroups.homeCover.items[2], alt: "从小岛毕业", className: "hero-card--three", emoji: "🎓" },
-  { src: mediaGroups.homeCover.items[3], alt: "人已在山里", className: "hero-card--four", emoji: "🦶🏻" },
-  { src: mediaGroups.homeCover.items[4], alt: "一些组队行为", className: "hero-card--five", emoji: "🎁" },
+  { src: mediaGroups.homeCover.items[0], alt: "含海量过高动态封面", className: "hero-card--one", kind: "video", emoji: "🐠" },
+  { src: mediaGroups.homeCover.items[1], alt: "绿得很具体人物贴纸", className: "hero-card--two", kind: "sticker", emoji: "🌴" },
+  { src: mediaGroups.homeCover.items[2], alt: "从小岛毕业小熊贴纸", className: "hero-card--three", kind: "sticker", emoji: "🎓" },
+  { src: mediaGroups.homeCover.items[3], alt: "人已在山里人物贴纸", className: "hero-card--four", kind: "sticker", emoji: "🦶🏻" },
+  { src: mediaGroups.homeCover.items[4], alt: "一些组队行为静态封面", className: "hero-card--five", kind: "square", emoji: "🎁" },
 ];
 
 const projectCursorEmojis = ["🐠", "🌴", "🎓", "🦶🏻", "🎁"] as const;
@@ -291,7 +291,7 @@ export default function Home() {
         <div className="hero-stage" aria-label="Draggable selected photography collage">
           {heroCards.map((card, index) => (
             <button
-              className={`hero-card ${card.className}`}
+              className={`hero-card ${card.className} hero-card--${card.kind}`}
               key={card.src}
               type="button"
               aria-label={`Move image ${index + 1}. Drag or use arrow keys.`}
