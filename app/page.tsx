@@ -27,21 +27,29 @@ const heroCards = [
 
 const projectCursorEmojis = ["🐠", "🌴", "🎓", "🦶🏻", "🎁"] as const;
 const bookCursorEmoji = "🖐🏻";
+const carouselSlots = [-2, -1, 0, 1, 2] as const;
 
 type HeroOffset = { x: number; y: number; rotate: number };
 type LightboxState = { project: number; image: number } | null;
 
 const isVideo = (src: string) => /\.(mp4|webm|ogg)(?:[?#].*)?$/i.test(src);
+const wrapIndex = (index: number, total: number) => ((index % total) + total) % total;
 
 function PortfolioMedia({
   src,
   alt,
   controls = false,
+  autoPlay = !controls,
+  muted = !controls,
+  loop = !controls,
   draggable,
 }: {
   src: string;
   alt: string;
   controls?: boolean;
+  autoPlay?: boolean;
+  muted?: boolean;
+  loop?: boolean;
   draggable?: boolean;
 }) {
   if (isVideo(src)) {
@@ -50,9 +58,9 @@ function PortfolioMedia({
         src={src}
         aria-label={alt}
         controls={controls}
-        autoPlay={!controls}
-        muted={!controls}
-        loop={!controls}
+        autoPlay={autoPlay}
+        muted={muted}
+        loop={loop}
         playsInline
         preload="metadata"
       />
@@ -66,7 +74,6 @@ function BookPage({ page }: { page: Book["pages"][number] }) {
   return (
     <div className="book-page">
       <PortfolioMedia src={page.image} alt={page.label} controls />
-      <small className="book-page-label">{page.label}</small>
     </div>
   );
 }
@@ -82,6 +89,7 @@ export default function Home() {
   const [lightbox, setLightbox] = useState<LightboxState>(null);
   const [activeBook, setActiveBook] = useState<number | null>(null);
   const [spread, setSpread] = useState(0);
+  const [previousSpread, setPreviousSpread] = useState(0);
   const [turnDirection, setTurnDirection] = useState<"next" | "prev">("next");
   const [galleryDirection, setGalleryDirection] = useState<"next" | "prev">("next");
   const [cursorSticker, setCursorSticker] = useState("");
@@ -232,6 +240,7 @@ export default function Home() {
   const openBook = (index: number) => {
     setActiveBook(index);
     setSpread(0);
+    setPreviousSpread(0);
     setTurnDirection("next");
     setCursorSticker(bookCursorEmoji);
   };
@@ -244,10 +253,11 @@ export default function Home() {
   const turnBook = (direction: "next" | "prev") => {
     if (activeBook === null) return;
     setTurnDirection(direction);
-    setSpread((current) => {
-      const last = books[activeBook].pages.length - 1;
-      return direction === "next" ? Math.min(last, current + 1) : Math.max(0, current - 1);
-    });
+    const last = books[activeBook].pages.length - 1;
+    const next = direction === "next" ? Math.min(last, spread + 1) : Math.max(0, spread - 1);
+    if (next === spread) return;
+    setPreviousSpread(spread);
+    setSpread(next);
   };
 
   const activeProject = lightbox ? projects[lightbox.project] : null;
@@ -277,15 +287,15 @@ export default function Home() {
       </header>
 
       <section className="hero" id="top" aria-labelledby="hero-title">
-        <p className="eyebrow">Visual designer · Image maker · Shenzhen / Beijing</p>
+        <p className="eyebrow">AI Product Manager · Visual / Image · AI Applications</p>
         <h1 id="hero-title">
-          Images before
+          AI products
           <br />
-          <span>explanations.</span>
+          <span>for visual worlds.</span>
         </h1>
         <p className="hero-intro">
-          Travel, portrait and collaborative image studies—built around colour,
-          observation and the small instant before a scene changes.
+          我是一名 AI 产品经理，专注视觉 / 图像内容及 AI 应用，
+          将感知、内容与技术转化为清晰可用的产品体验。
         </p>
 
         <div className="hero-stage" aria-label="Draggable selected photography collage">
@@ -330,22 +340,56 @@ export default function Home() {
       <section className="manifesto" aria-label="Artist statement">
         <p className="section-label">Approach — 01</p>
         <p className="manifesto-copy">
-          I photograph the point where the <em>glamorous</em> becomes ordinary—and
-          ordinary things start to feel a little strange.
+          I build AI products where <em>visual intelligence</em> becomes clear,
+          useful and ready for people to explore.
         </p>
         <div className="ticker" aria-hidden="true">
           <div>
-            Portrait · Editorial · Art direction · Image making · Portrait · Editorial · Art
-            direction · Image making ·
+            AI product strategy · Multimodal experience · Visual content · Prototyping · AI
+            product strategy · Multimodal experience ·
           </div>
         </div>
       </section>
 
       <section className="work-section" id="work" aria-labelledby="work-title">
+        <div className="project-index project-index--lead" aria-label="Project index">
+          <p className="section-label">INDEX / HOVER TO PREVIEW</p>
+          <div className="index-layout">
+            <div className="index-list">
+              {projects.map((project, projectIndex) => (
+                <button
+                  type="button"
+                  key={project.title}
+                  onMouseEnter={() => {
+                    setIndexHover(projectIndex);
+                    setCursorSticker(projectCursorEmojis[projectIndex]);
+                  }}
+                  onMouseLeave={() => setCursorSticker("")}
+                  onFocus={() => setIndexHover(projectIndex)}
+                  onClick={() => openProject(projectIndex)}
+                >
+                  <span>0{projectIndex + 1}</span>
+                  <strong>{project.title}</strong>
+                  <span>{project.kind}</span>
+                  <span>{project.year} ↗</span>
+                </button>
+              ))}
+            </div>
+            <figure className="index-preview">
+              <PortfolioMedia
+                key={projects[indexHover].images[1] ?? projects[indexHover].images[0]}
+                src={projects[indexHover].images[1] ?? projects[indexHover].images[0]}
+                alt={`${projects[indexHover].title} preview`}
+              />
+              <figcaption>{projects[indexHover].note}</figcaption>
+            </figure>
+          </div>
+        </div>
+
         <div className="section-heading">
           <p className="section-label">Selected work — 02</p>
           <h2 id="work-title">Five visual stories</h2>
-          <p>Click any image to enter the series. Use arrow keys to move through it.</p>
+          <p>点击任意封面进入对应系列，使用左右方向键平滑浏览。</p>
         </div>
 
         <div className="project-grid">
@@ -380,39 +424,6 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="project-index" aria-label="Project index">
-          <p className="section-label">Index / hover to preview</p>
-          <div className="index-layout">
-            <div className="index-list">
-              {projects.map((project, projectIndex) => (
-                <button
-                  type="button"
-                  key={project.title}
-                  onMouseEnter={() => {
-                    setIndexHover(projectIndex);
-                    setCursorSticker(projectCursorEmojis[projectIndex]);
-                  }}
-                  onMouseLeave={() => setCursorSticker("")}
-                  onFocus={() => setIndexHover(projectIndex)}
-                  onClick={() => openProject(projectIndex)}
-                >
-                  <span>0{projectIndex + 1}</span>
-                  <strong>{project.title}</strong>
-                  <span>{project.kind}</span>
-                  <span>{project.year} ↗</span>
-                </button>
-              ))}
-            </div>
-            <figure className="index-preview">
-              <PortfolioMedia
-                key={projects[indexHover].images[1] ?? projects[indexHover].images[0]}
-                src={projects[indexHover].images[1] ?? projects[indexHover].images[0]}
-                alt={`${projects[indexHover].title} preview`}
-              />
-              <figcaption>{projects[indexHover].note}</figcaption>
-            </figure>
-          </div>
-        </div>
       </section>
 
       <section className="books-section" id="books" aria-labelledby="books-title">
@@ -423,7 +434,7 @@ export default function Home() {
             <br />
             Made to be opened.
           </h2>
-          <p>Choose a cover, then click or swipe through each spread.</p>
+          <p>选择一本作品集，点击页面左右两侧或左右滑动，像翻阅实体书一样浏览。</p>
         </div>
         <div className="book-shelf">
           {books.map((book, index) => (
@@ -438,7 +449,6 @@ export default function Home() {
               }}
               aria-label={`Open ${book.title}`}
             >
-              <span className="book-spine" style={{ background: book.accent }} />
               <span className="book-cover">
                 <PortfolioMedia src={book.cover} alt={`${book.title} cover`} />
               </span>
@@ -453,8 +463,8 @@ export default function Home() {
           <h2 id="about-title">Available for images, ideas and beautiful problems.</h2>
           <div className="about-copy">
             <p>
-            Raina / 周小雨是一名视觉设计师与影像创作者，工作横跨摄影、内容创作、
-            产品视觉与自发出版项目。
+            Raina / 周小雨是一名 AI 产品经理，专注视觉 / 图像内容及 AI 应用，
+            工作横跨产品策略、多模态体验、视觉内容与快速原型。
             </p>
             <p>
               For commissions, exhibitions, print enquiries or a longer conversation,
@@ -499,17 +509,35 @@ export default function Home() {
           <button className="lightbox-nav lightbox-nav--prev" type="button" onClick={() => changeLightbox(-1)} aria-label="Previous image">
             ←
           </button>
-          <figure
-            className={`lightbox-figure lightbox-figure--project-${lightbox.project + 1} lightbox-figure--${galleryDirection} lightbox-figure--variant-${lightbox.image % 3}`}
-            key={`${activeProject.images[lightbox.image]}-${galleryDirection}`}
-          >
-            <PortfolioMedia
-              src={activeProject.images[lightbox.image]}
-              alt={`${activeProject.title} media ${lightbox.image + 1}`}
-              controls
-            />
-            <figcaption>{activeProject.note}</figcaption>
-          </figure>
+          <div className="orbit-carousel" aria-live="polite">
+            <div
+              className={`orbit-track orbit-track--${galleryDirection}`}
+              key={`${lightbox.project}-${lightbox.image}-${galleryDirection}`}
+            >
+              {carouselSlots.map((slot) => {
+                const imageIndex = wrapIndex(lightbox.image + slot, activeProject.images.length);
+                const src = activeProject.images[imageIndex];
+                const fromSlot = slot + (galleryDirection === "next" ? 1 : -1);
+                return (
+                  <figure
+                    className={`orbit-item${slot === 0 ? " orbit-item--center" : ""}${Math.abs(slot) === 2 ? " orbit-item--far" : ""}`}
+                    key={slot}
+                    style={{ "--slot": slot, "--from-slot": fromSlot } as CSSProperties}
+                    aria-hidden={slot !== 0}
+                  >
+                    <PortfolioMedia
+                      src={src}
+                      alt={`${activeProject.title} media ${imageIndex + 1}`}
+                      autoPlay={slot === 0}
+                      muted
+                      loop
+                    />
+                  </figure>
+                );
+              })}
+            </div>
+            <p className="orbit-caption">{activeProject.note}</p>
+          </div>
           <button className="lightbox-nav lightbox-nav--next" type="button" onClick={() => changeLightbox(1)} aria-label="Next image">
             →
           </button>
@@ -556,8 +584,22 @@ export default function Home() {
               disabled={spread === 0}
               aria-label="Previous spread"
             />
-            <div className={`open-book open-book--${turnDirection}`} key={`${activeBook}-${spread}`}>
-              <BookPage page={currentBook.pages[spread]} />
+            <div className="open-book">
+              <div className="book-under-page" aria-hidden="true">
+                <BookPage page={currentBook.pages[previousSpread]} />
+              </div>
+              <div
+                className={`book-turning-sheet book-turning-sheet--${turnDirection}`}
+                key={`${activeBook}-${spread}-${turnDirection}`}
+              >
+                <div className="book-sheet-face book-sheet-face--front">
+                  <BookPage page={currentBook.pages[previousSpread]} />
+                </div>
+                <div className="book-sheet-face book-sheet-face--back">
+                  <BookPage page={currentBook.pages[spread]} />
+                </div>
+              </div>
+              <span className="book-page-edge" aria-hidden="true" />
             </div>
             <button
               className="reader-hit reader-hit--right"
@@ -569,11 +611,11 @@ export default function Home() {
           </div>
           <div className="reader-controls">
             <button type="button" onClick={() => turnBook("prev")} disabled={spread === 0}>
-              ← Previous
+              ← 上一页
             </button>
-            <p>Click the page · drag · or use arrow keys</p>
+            <p>点击页面左右两侧 · 左右滑动 · 或使用方向键</p>
             <button type="button" onClick={() => turnBook("next")} disabled={spread === currentBook.pages.length - 1}>
-              Next →
+              下一页 →
             </button>
           </div>
         </div>

@@ -190,8 +190,9 @@ img {
 
 .hero h1 span {
   display: inline-block;
-  margin-left: 9vw;
+  margin-left: 6vw;
   font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.76em;
   font-style: italic;
   font-weight: 400;
   text-transform: none;
@@ -581,6 +582,11 @@ img {
   padding-top: 12px;
 }
 
+.project-index--lead {
+  margin-top: 0;
+  margin-bottom: 20vh;
+}
+
 .index-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.7fr);
@@ -690,10 +696,9 @@ img {
 
 .book-object {
   position: relative;
-  display: grid;
-  grid-template-columns: 22px minmax(0, 1fr);
+  display: block;
+  width: 100%;
   height: auto;
-  aspect-ratio: 16 / 9;
   border: 0;
   padding: 0;
   color: #fff;
@@ -716,26 +721,22 @@ img {
   transform: rotateX(0deg) rotateY(0deg) translateY(-25px) scale(1.025);
 }
 
-.book-spine {
-  height: 100%;
-  box-shadow: inset -6px 0 10px rgb(0 0 0 / 0.25);
-}
-
 .book-cover {
-  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
   overflow: hidden;
-  height: 100%;
   box-shadow: 20px 30px 50px rgb(0 0 0 / 0.28);
 }
 
 .book-cover img,
 .book-cover video {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
   object-fit: contain;
-  background: #f5f1e8;
+  background: transparent;
 }
 
 .about-section {
@@ -865,107 +866,89 @@ footer div {
 .lightbox {
   display: grid;
   place-items: center;
+  overflow: hidden;
   color: #fff;
   background: #090909;
 }
 
-.lightbox-figure {
+.orbit-carousel {
+  position: absolute;
+  inset: 72px 0 54px;
+  overflow: hidden;
+}
+
+.orbit-track {
+  position: absolute;
+  inset: 0;
+  --orbit-step: clamp(260px, 33vw, 560px);
+}
+
+.orbit-item {
+  position: absolute;
+  top: 49%;
+  left: 50%;
   display: grid;
-  justify-items: center;
-  max-width: 88vw;
-  max-height: 84vh;
-  margin: 34px 0 0;
-  --gallery-x: 64px;
-  --gallery-x-third: 22px;
-  --gallery-x-tiny: 5px;
-  --gallery-x-rebound: -5px;
-  --gallery-tilt: 2.5deg;
-  --gallery-tilt-half: 1.25deg;
-  --gallery-tilt-rebound: -0.6deg;
-  --gallery-tilt-wide: 12deg;
-  --gallery-tilt-step: -1.5deg;
-  --gallery-tilt-pop: 5.75deg;
-  animation-duration: 680ms;
-  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  animation-fill-mode: both;
+  width: min(60vw, 900px);
+  height: min(68vh, 670px);
+  margin: 0;
+  place-items: center;
+  opacity: 0.48;
+  filter: grayscale(1) contrast(0.92) brightness(0.66);
+  --orbit-scale: 0.68;
+  transform: translate(-50%, -50%) translateX(calc(var(--slot) * var(--orbit-step))) scale(var(--orbit-scale));
+  animation: orbitSlide 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.lightbox-figure--prev {
-  --gallery-x: -64px;
-  --gallery-x-third: -22px;
-  --gallery-x-tiny: -5px;
-  --gallery-x-rebound: 5px;
-  --gallery-tilt: -2.5deg;
-  --gallery-tilt-half: -1.25deg;
-  --gallery-tilt-rebound: 0.6deg;
-  --gallery-tilt-wide: -12deg;
-  --gallery-tilt-step: 1.5deg;
-  --gallery-tilt-pop: -5.75deg;
+.orbit-item--far {
+  z-index: 1;
+  opacity: 0.2;
+  --orbit-scale: 0.5;
 }
 
-.lightbox-figure--project-1 { animation-name: gallerySwim; }
-.lightbox-figure--project-2 { animation-name: galleryGrow; }
-.lightbox-figure--project-3 { animation-name: galleryToss; }
-.lightbox-figure--project-4 { animation-name: galleryStep; }
-.lightbox-figure--project-5 { animation-name: galleryUnwrap; }
-
-.lightbox-figure--variant-1 {
-  transform-origin: 34% 58%;
-  animation-duration: 760ms;
+.orbit-item--center {
+  z-index: 3;
+  opacity: 1;
+  filter: none;
+  --orbit-scale: 1;
 }
 
-.lightbox-figure--variant-2 {
-  transform-origin: 68% 42%;
-  animation-duration: 610ms;
-}
-
-@keyframes gallerySwim {
-  from { opacity: 0; transform: translate3d(var(--gallery-x), 22px, 0) rotate(var(--gallery-tilt)) scale(0.96); }
-  58% { transform: translate3d(var(--gallery-x-rebound), -5px, 0) rotate(var(--gallery-tilt-rebound)) scale(1.008); }
-}
-
-@keyframes galleryGrow {
-  from { opacity: 0; clip-path: inset(100% 0 0 0); transform: translateY(32px) rotate(var(--gallery-tilt-half)); }
-  70% { clip-path: inset(0 0 0 0); transform: translateY(-5px) rotate(0deg); }
-}
-
-@keyframes galleryToss {
-  from { opacity: 0; transform: perspective(1300px) translateX(var(--gallery-x)) rotateY(var(--gallery-tilt-wide)) rotateZ(var(--gallery-tilt)) scale(0.92); }
-  68% { transform: perspective(1300px) translateX(0) rotateY(-2deg) rotateZ(-0.4deg) scale(1.01); }
-}
-
-@keyframes galleryStep {
-  from { opacity: 0; transform: translate3d(var(--gallery-x), 48px, 0) rotate(var(--gallery-tilt-step)) scale(0.97); }
-  42% { transform: translate3d(var(--gallery-x-third), -8px, 0) rotate(var(--gallery-tilt)); }
-  72% { transform: translate3d(var(--gallery-x-tiny), 4px, 0) rotate(0deg); }
-}
-
-@keyframes galleryUnwrap {
-  from { opacity: 0; transform: scale(0.62) rotate(var(--gallery-tilt-pop)); filter: saturate(0.25) blur(7px); }
-  62% { transform: scale(1.035) rotate(-0.8deg); filter: saturate(1.2) blur(0); }
-}
-
-.lightbox-figure img,
-.lightbox-figure video {
+.orbit-item img,
+.orbit-item video {
   width: auto;
   height: auto;
-  max-width: 88vw;
-  max-height: 76vh;
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
+  background: #080808;
+  box-shadow: 0 24px 65px rgb(0 0 0 / 0.34);
 }
 
-.lightbox-figure video {
-  background: #000;
+.orbit-item:not(.orbit-item--center) img,
+.orbit-item:not(.orbit-item--center) video {
+  box-shadow: none;
 }
 
-.lightbox-figure figcaption {
-  max-width: 380px;
-  margin-top: 12px;
+.orbit-caption {
+  position: absolute;
+  z-index: 5;
+  right: 50%;
+  bottom: 4px;
+  width: min(420px, 74vw);
+  margin: 0;
   text-align: center;
   font-size: 10px;
-  line-height: 1.4;
-  text-transform: uppercase;
+  line-height: 1.45;
   letter-spacing: 0.08em;
+  transform: translateX(50%);
+}
+
+@keyframes orbitSlide {
+  from {
+    transform: translate(-50%, -50%) translateX(calc(var(--from-slot) * var(--orbit-step))) scale(var(--orbit-scale));
+  }
+  to {
+    transform: translate(-50%, -50%) translateX(calc(var(--slot) * var(--orbit-step))) scale(var(--orbit-scale));
+  }
 }
 
 .lightbox-nav {
@@ -1015,16 +998,12 @@ footer div {
   width: min(90vw, calc(76vh * 16 / 9), 1420px);
   height: auto;
   aspect-ratio: 16 / 9;
+  overflow: visible;
+  background: #f4f0e8;
   box-shadow: 0 32px 80px rgb(0 0 0 / 0.32);
   isolation: isolate;
-  transform-origin: left center;
+  perspective: 2200px;
   transform-style: preserve-3d;
-  animation: bookNext 760ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.open-book--prev {
-  transform-origin: right center;
-  animation-name: bookPrev;
 }
 
 .open-book::before,
@@ -1040,18 +1019,94 @@ footer div {
 .open-book::before { inset: 6px -7px -7px 7px; }
 .open-book::after { inset: 11px -12px -12px 12px; z-index: -2; }
 
-@keyframes bookNext {
-  from { opacity: 0.12; transform: perspective(1800px) rotateY(-74deg) translateX(7%) scale(0.96); filter: brightness(0.68); }
-  64% { opacity: 1; transform: perspective(1800px) rotateY(5deg) translateX(0) scale(1.005); filter: brightness(1); }
+.book-under-page,
+.book-turning-sheet {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #f7f3e9;
 }
 
-@keyframes bookPrev {
-  from { opacity: 0.12; transform: perspective(1800px) rotateY(74deg) translateX(-7%) scale(0.96); filter: brightness(0.68); }
-  64% { opacity: 1; transform: perspective(1800px) rotateY(-5deg) translateX(0) scale(1.005); filter: brightness(1); }
+.book-under-page {
+  filter: brightness(0.9);
+  transform: translate3d(5px, 4px, -5px);
+}
+
+.book-turning-sheet {
+  z-index: 2;
+  overflow: visible;
+  background: transparent;
+  transform-style: preserve-3d;
+  animation-duration: 820ms;
+  animation-timing-function: cubic-bezier(0.2, 0.72, 0.18, 1);
+  animation-fill-mode: both;
+}
+
+.book-sheet-face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #f7f3e9;
+  backface-visibility: hidden;
+}
+
+.book-sheet-face--back {
+  transform: rotateY(180deg);
+}
+
+.book-turning-sheet::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(90deg, rgb(0 0 0 / 0.38), transparent 18%, transparent 78%, rgb(255 255 255 / 0.28));
+  animation: pageCurlShade 820ms ease both;
+}
+
+.book-turning-sheet--next {
+  transform-origin: left center;
+  animation-name: turnPageFromRight;
+}
+
+.book-turning-sheet--prev {
+  transform-origin: right center;
+  animation-name: turnPageFromLeft;
+}
+
+.book-page-edge {
+  position: absolute;
+  z-index: 4;
+  right: -5px;
+  bottom: -5px;
+  width: calc(100% - 8px);
+  height: 5px;
+  background: repeating-linear-gradient(0deg, #d7d2c8 0 1px, #f8f4eb 1px 2px);
+  box-shadow: 0 7px 13px rgb(0 0 0 / 0.2);
+}
+
+@keyframes turnPageFromRight {
+  from { transform: rotateY(0deg); filter: brightness(1); }
+  50% { transform: rotateY(-92deg); filter: brightness(0.58); }
+  to { transform: rotateY(-180deg); filter: brightness(1); }
+}
+
+@keyframes turnPageFromLeft {
+  from { transform: rotateY(0deg); filter: brightness(1); }
+  50% { transform: rotateY(92deg); filter: brightness(0.58); }
+  to { transform: rotateY(180deg); filter: brightness(1); }
+}
+
+@keyframes pageCurlShade {
+  0% { opacity: 0; }
+  50% { opacity: 0.72; }
+  100% { opacity: 0; }
 }
 
 .book-page {
   position: relative;
+  width: 100%;
+  height: 100%;
   min-width: 0;
   overflow: hidden;
   background: #f7f3e9;
@@ -1371,7 +1426,7 @@ footer div {
   .index-list button { grid-template-columns: 32px 1fr auto; }
   .index-list button span:nth-child(3) { display: none; }
   .book-shelf { gap: 16px; width: 100%; }
-  .book-object { grid-template-columns: 14px 1fr; height: auto; }
+  .book-object { height: auto; }
   .about-grid { grid-template-columns: 1fr; }
   .about-copy { max-width: 520px; }
   .lightbox-nav { top: auto; bottom: 22px; width: 48px; height: 48px; }
@@ -1408,9 +1463,11 @@ footer div {
   .overlay-topbar { grid-template-columns: 1fr auto; padding: 14px; }
   .overlay-topbar > p { display: none; }
   .overlay-topbar > div span { display: none; }
-  .lightbox-figure { max-width: 96vw; }
-  .lightbox-figure img, .lightbox-figure video { max-width: 96vw; max-height: 70vh; }
-  .reader-stage { inset-top: 60px; }
+  .orbit-carousel { inset: 62px 0 62px; }
+  .orbit-track { --orbit-step: 76vw; }
+  .orbit-item { width: 88vw; height: 64vh; }
+  .orbit-item--far { display: none; }
+  .reader-stage { top: 60px; }
   .open-book {
     width: 94vw;
     height: auto;

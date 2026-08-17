@@ -98,7 +98,7 @@ export const mediaGroups = {
   },
   environmentPortfolio: {
     folder: "07-book-field-notes",
-    items: pageSequence("07-book-field-notes", 47),
+    items: pageSequence("07-book-field-notes", 50),
   },
   resume: {
     folder: "简历",
@@ -186,7 +186,7 @@ export const books: Book[] = [
   {
     title: "环境设计作品集",
     subtitle: "Space / Architecture / Research",
-    edition: "47 pages · 2023",
+    edition: "50 pages · 2023",
     cover: mediaGroups.environmentPortfolio.items[0],
     accent: "#79c9ba",
     pages: makeBookPages(mediaGroups.environmentPortfolio.items),

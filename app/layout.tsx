@@ -7,9 +7,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "localhost:3000";
   const protocol = requestHeaders.get("x-forwarded-proto") ?? (host.includes("localhost") ? "http" : "https");
   const baseUrl = new URL(`${protocol}://${host}`);
-  const title = "RAINA 周小雨 — Visual Designer & Image Maker";
+  const title = "RAINA 周小雨 — AI Product Manager";
   const description =
-    "周小雨的影像与视觉设计作品集，包含旅行摄影、毕业季记录、合作现场、设计作品集与个人简历。";
+    "周小雨的 AI 产品与视觉图像作品集，专注视觉内容、图像体验及 AI 应用。";
   const socialImage = new URL("/og-raina.png", baseUrl).toString();
 
   return {
@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       type: "website",
-      images: [{ url: socialImage, width: 1738, height: 905, alt: "RAINA 周小雨 — Visual portfolio" }],
+      images: [{ url: socialImage, width: 1738, height: 905, alt: "RAINA 周小雨 — AI 产品与视觉图像作品集" }],
     },
     twitter: {
       card: "summary_large_image",
