@@ -439,11 +439,32 @@ img {
   letter-spacing: -0.07em;
 }
 
-.section-heading > p:last-child {
-  max-width: 260px;
-  margin: 0;
-  font-size: 12px;
-  line-height: 1.45;
+.work-guide {
+  width: min(290px, 100%);
+  border: 1px solid var(--ink);
+  padding: 14px 15px 12px;
+  background: var(--acid);
+  box-shadow: 8px 8px 0 var(--ink);
+  transform: rotate(1.25deg);
+}
+
+.work-guide > span {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.work-guide p {
+  margin: 34px 0 22px;
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.work-guide strong {
+  display: block;
+  font-size: 42px;
+  font-weight: 400;
+  line-height: 0.72;
 }
 
 .project-grid {
@@ -569,13 +590,19 @@ img {
 }
 
 .index-intro {
-  width: min(720px, 72vw);
-  margin: 7vh 0 0 24%;
+  width: min(1250px, 92vw);
+  margin: 8vh auto 0;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(30px, 4.6vw, 72px);
+  font-size: clamp(34px, 4.6vw, 78px);
   font-style: italic;
-  line-height: 0.98;
+  line-height: 0.94;
   letter-spacing: -0.055em;
+  text-align: center;
+}
+
+.index-intro span {
+  display: block;
+  white-space: nowrap;
 }
 
 .index-layout {
@@ -760,6 +787,23 @@ img {
 
 .about-copy a {
   border-bottom: 1px solid;
+}
+
+.contact-details {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 7px 14px;
+  align-items: baseline;
+}
+
+.contact-details span {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.contact-details a {
+  width: max-content;
 }
 
 .resume-button {
@@ -1414,7 +1458,8 @@ footer div {
   .manifesto-copy { margin-top: 18vh; font-size: 11.8vw; }
   .section-heading, .books-heading { grid-template-columns: 1fr; }
   .section-heading h2, .books-heading h2 { grid-column: 1; margin-top: 8vh; }
-  .section-heading > p:last-child, .books-heading > p:last-child { grid-column: 1; }
+  .books-heading > p:last-child { grid-column: 1; }
+  .work-guide { grid-column: 1; margin-top: 28px; transform: none; }
   .project-grid { gap: 11vh 12px; }
   .project-card--1 { grid-column: 1 / span 9; }
   .project-card--2 { grid-column: 6 / span 7; margin-top: 0; }
@@ -1424,8 +1469,8 @@ footer div {
   .project-image, .project-card--2 .project-image, .project-card--3 .project-image { height: 80vw; }
   .index-layout { grid-template-columns: 1fr; }
   .index-preview { display: none; }
-  .index-list button { grid-template-columns: 32px 1fr auto; }
-  .index-list button span:nth-child(3) { display: none; }
+  .index-row { grid-template-columns: 32px 1fr auto; }
+  .index-row span:nth-child(3) { display: none; }
   .book-shelf { gap: 16px; width: 100%; }
   .book-object { height: auto; }
   .about-grid { grid-template-columns: 1fr; }
@@ -1443,7 +1488,7 @@ footer div {
   .site-header nav a:nth-child(2) { display: none; }
   .manifesto { min-height: 80svh; }
   .manifesto-copy { margin-bottom: 100px; }
-  .index-intro { width: 92%; margin: 6vh 0 0; font-size: 10vw; }
+  .index-intro { width: 100%; margin: 7vh auto 0; font-size: 6.3vw; line-height: 1.02; }
   .section-heading h2, .books-heading h2, .about-grid h2 { font-size: 14.5vw; }
   .section-heading { margin-bottom: 8vh; }
   .project-card--1, .project-card--2, .project-card--3, .project-card--4, .project-card--5 {

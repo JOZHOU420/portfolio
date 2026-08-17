@@ -292,7 +292,7 @@ export default function Home() {
           <a href="#work">Selected work</a>
           <a href="#books">Books</a>
           <button type="button" onClick={() => setResumeOpen(true)}>
-            Résumé ↗
+            简历 ↗
           </button>
         </nav>
       </header>
@@ -363,7 +363,10 @@ export default function Home() {
       <section className="work-section" id="work" aria-labelledby="work-title">
         <div className="project-index project-index--lead" aria-label="Project index">
           <p className="section-label">INDEX / HOVER TO PREVIEW</p>
-          <p className="index-intro">五组摄影作品，记录五个从日常生活里拾起的片段。</p>
+          <p className="index-intro">
+            <span>五组摄影作品，记录五个</span>
+            <span>从日常生活里拾起的片段。</span>
+          </p>
           <div className="index-layout">
             <div className="index-list">
               {projects.map((project, projectIndex) => (
@@ -397,7 +400,11 @@ export default function Home() {
         <div className="section-heading">
           <p className="section-label">Selected work — 02</p>
           <h2 id="work-title">Five visual stories</h2>
-          <p>点击任意封面进入对应系列，使用左右方向键平滑浏览。</p>
+          <div className="work-guide">
+            <span>下一步 / NEXT</span>
+            <p>点击任意封面进入对应图组系列，使用左右方向键平滑浏览。</p>
+            <strong aria-hidden="true">↓</strong>
+          </div>
         </div>
 
         <div className="project-grid">
@@ -466,19 +473,25 @@ export default function Home() {
             Raina / 周小雨是一名 AI 产品经理，专注视觉 / 图像内容及 AI 应用，
             工作横跨产品策略、多模态体验、视觉内容与快速原型。
             </p>
-            <p>
-              For commissions, exhibitions, print enquiries or a longer conversation,
-              write to <a href="mailto:1341059849@qq.com">1341059849@qq.com</a>.
+            <p className="contact-details">
+              <span>电话 / 微信</span>
+              <a href="tel:13114936926">13114936926（微信同号）</a>
+              <span>邮箱</span>
+              <a href="mailto:1341059849@qq.com">1341059849@qq.com</a>
             </p>
             <button className="resume-button" type="button" onClick={() => setResumeOpen(true)}>
-              Open full-screen résumé <span>↗</span>
+              全屏查看简历 <span>↗</span>
             </button>
           </div>
         </div>
       </section>
 
       <footer>
-        <a href="mailto:1341059849@qq.com">Let’s make something worth looking at.</a>
+        <a href="mailto:1341059849@qq.com">
+          以 AI 与图像产品，
+          <br />
+          帮助用户创造更多好作品。
+        </a>
         <div>
           <span>Shenzhen / Beijing</span>
           <span>© 2026 RAINA</span>
