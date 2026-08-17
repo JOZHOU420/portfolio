@@ -487,10 +487,9 @@ export default function Home() {
       </section>
 
       <footer>
-        <a href="mailto:1341059849@qq.com">
-          以 AI 与图像产品，
-          <br />
-          帮助用户创造更多好作品。
+        <a className="footer-cta" href="mailto:1341059849@qq.com">
+          <span className="footer-cta-en">Empowering everyone to create something worth seeing.</span>
+          <span className="footer-cta-zh">让每个人都能创造值得被看见的作品。</span>
         </a>
         <div>
           <span>Shenzhen / Beijing</span>

@@ -829,16 +829,28 @@ footer {
   background: var(--ink);
 }
 
-footer > a {
+.footer-cta {
   display: block;
-  max-width: 1350px;
+  max-width: 1600px;
   padding-bottom: 14vh;
-  font-size: clamp(52px, 9.7vw, 150px);
+}
+
+.footer-cta-en {
+  display: block;
+  font-size: clamp(52px, 7.6vw, 122px);
   line-height: 0.86;
   letter-spacing: -0.072em;
 }
 
-footer > a:hover {
+.footer-cta-zh {
+  display: block;
+  margin-top: 34px;
+  font-size: clamp(18px, 2.2vw, 34px);
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+
+.footer-cta:hover {
   color: var(--acid);
 }
 
@@ -1505,7 +1517,8 @@ footer div {
   .book-object { height: auto; }
   .books-section { min-height: auto; }
   .about-section { min-height: 88svh; }
-  footer > a { font-size: 16vw; }
+  .footer-cta-en { font-size: 14vw; }
+  .footer-cta-zh { margin-top: 22px; font-size: 5.2vw; }
   footer div { display: grid; gap: 10px; }
   .overlay-topbar { grid-template-columns: 1fr auto; padding: 14px; }
   .overlay-topbar > p { display: none; }
