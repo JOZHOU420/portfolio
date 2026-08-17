@@ -352,6 +352,9 @@ export default function Home() {
           I build AI products where <em>visual intelligence</em> becomes clear,
           useful and ready for people to explore.
         </p>
+        <p className="manifesto-copy-zh">
+          我热爱摄影、审美与图像创作，也希望打造真正实用、人人都能轻松探索的视觉智能 AI 产品。
+        </p>
         <div className="ticker" aria-hidden="true">
           <div>
             AI product strategy · Multimodal experience · Visual content · Prototyping · AI
