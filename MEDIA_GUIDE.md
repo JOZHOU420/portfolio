@@ -1,47 +1,36 @@
 # 分组素材替换指南
 
-所有图片与视频现在都在 `public/media` 中，并按项目分组：
+网站现在直接使用 `public/media` 内的分组素材：
 
-| 文件夹 | 对应页面内容 |
+| 文件夹 | 页面内容 |
 | --- | --- |
-| `01-blue-static` | Blue Static 项目 |
-| `02-between-volumes` | Between Volumes 项目 |
-| `03-after-the-heat` | After the Heat 项目 |
-| `04-soft-signal` | Soft Signal 视频项目 |
-| `05-book-field-notes` | 第一本作品册 Field Notes 01 |
-| `06-book-distance-volume` | 第二本作品册 Distance, Volume |
+| `01-下海那会` | 下海那会，7 张图片 + 2 段视频 |
+| `02-雨林那会` | 雨林那会，9 张图片 |
+| `03-yello-毕业那会` | YELLO — 毕业那会，7 张图片 |
+| `04-上山那会` | 上山那会，9 张图片 |
+| `05-teamwork` | TEAMWORK，12 张图片 |
+| `06-book-distance-volume/pages` | Raina 设计作品集，63 页 |
+| `07-book-field-notes/pages` | 环境设计作品集，47 页 |
+| `简历/pages` | 全屏简历，2 页 |
 
-## 原位替换
+## 图片和视频
 
-进入某个项目文件夹，用同名文件覆盖旧文件即可。例如：
+- 每个影像组的第一项是项目封面。
+- 同一组可以混放 JPG、PNG、MP4、WebM 和 OGG。
+- 新增或改名后，需要同步修改 `app/portfolio-data.ts` 中对应组的 `items`。
+- 网站封面视频会静音循环播放，打开全屏后提供播放控制。
 
-- 替换 Blue Static 封面：覆盖 `public/media/01-blue-static/01-cover.jpg`。
-- 替换 Soft Signal 视频：覆盖 `public/media/04-soft-signal/01-cover.mp4`。
+## 两本 PDF 作品集
 
-同名覆盖时不需要修改代码。替换完成后需要重新发布，线上网站才会更新。
+网页翻页器读取每个作品集文件夹中的 `pages/page-001.jpg`、`page-002.jpg`……。
+本次已从两份 PDF 生成全部页面。为避免线上单文件大小限制，原始大 PDF 保存在本机的
+`source-media/original-pdfs`，不会随网站发布。
 
-## 给一组增加更多素材
+更换 PDF 后，需要重新将每页导出为横向 JPG，文件宽度建议 1600px，并保持三位数字编号。
 
-1. 把新文件放进对应项目文件夹。
-2. 打开 `app/portfolio-data.ts`。
-3. 在该组的 `items` 中增加路径，顺序就是网站里的浏览顺序。
+## 简历
 
-```ts
-blueStatic: {
-  folder: "/media/01-blue-static",
-  items: [
-    "/media/01-blue-static/01-cover.jpg",
-    "/media/01-blue-static/02-portrait.jpg",
-    "/media/01-blue-static/03-detail.mp4",
-  ],
-},
-```
+简历全屏层使用 `简历/pages` 中的页面图片，同时保留
+`简历/周小雨简历初稿.pdf` 供访问者打开原始 PDF。
 
-每个项目组的第一个素材是项目封面。系统会根据扩展名自动识别 `.mp4`、`.webm` 和 `.ogg` 视频。
-
-## 视频建议
-
-- 首选 MP4：H.264 视频编码 + AAC 音频编码。
-- 项目封面会静音循环播放，全屏打开后有完整播放控制。
-- 不建议直接使用 MOV。
-- 单条视频建议控制在 30–50 MB 以内。
+更换素材并不会自动更新线上版本；完成替换后仍需重新发布网站。

@@ -1,49 +1,99 @@
 /**
- * GROUPED MEDIA GUIDE
  * Every website project/book has one matching folder under /public/media.
- * Replace files inside that folder, or add a new path to its `items` array.
- * The first item in each project group is used as that project's cover.
- * .mp4, .webm and .ogg paths are detected automatically as video.
+ * The first item in a project group is used as that project's cover.
+ * Images and videos can be mixed; the UI detects common video extensions.
  */
+const mediaPath = (folder: string, file: string) => encodeURI(`/media/${folder}/${file}`);
+
+const pageSequence = (folder: string, count: number) =>
+  Array.from({ length: count }, (_, index) =>
+    mediaPath(folder, `pages/page-${String(index + 1).padStart(3, "0")}.jpg`),
+  );
+
 export const mediaGroups = {
-  blueStatic: {
-    folder: "/media/01-blue-static",
+  downByTheSea: {
+    folder: "01-下海那会",
     items: [
-      "/media/01-blue-static/01-cover.jpg",
-      "/media/01-blue-static/02-portrait.jpg",
+      mediaPath("01-下海那会", "01-cover.jpg"),
+      mediaPath("01-下海那会", "02-portrait.jpg"),
+      mediaPath("01-下海那会", "03-cover.jpg"),
+      mediaPath("01-下海那会", "04-cover.jpg"),
+      mediaPath("01-下海那会", "05-landscape.jpg"),
+      mediaPath("01-下海那会", "微信图片_2026-08-17_231657_509.jpg"),
+      mediaPath("01-下海那会", "微信图片_2026-08-17_231705_297.jpg"),
+      mediaPath("01-下海那会", "bad4f7137812d61fd2c60f2a47d011f2_raw.mp4"),
+      mediaPath("01-下海那会", "e4c6ba49b1197dba8381343be473e0c6_raw.mp4"),
     ],
   },
-  betweenVolumes: {
-    folder: "/media/02-between-volumes",
-    items: ["/media/02-between-volumes/01-cover.jpg"],
-  },
-  afterTheHeat: {
-    folder: "/media/03-after-the-heat",
+  rainforest: {
+    folder: "02-雨林那会",
     items: [
-      "/media/03-after-the-heat/01-cover.jpg",
-      "/media/03-after-the-heat/02-landscape.jpg",
+      mediaPath("02-雨林那会", "微信图片_2026-08-17_231730_879.jpg"),
+      mediaPath("02-雨林那会", "微信图片_2026-08-17_231759_531.jpg"),
+      mediaPath("02-雨林那会", "微信图片_2026-08-17_231807_055.jpg"),
+      mediaPath("02-雨林那会", "微信图片_2026-08-17_235905_547.jpg"),
+      mediaPath("02-雨林那会", "微信图片_2026-08-17_235918_846.jpg"),
+      mediaPath("02-雨林那会", "微信图片_2026-08-17_235924_179.jpg"),
+      mediaPath("02-雨林那会", "微信图片_2026-08-17_235928_560.jpg"),
+      mediaPath("02-雨林那会", "微信图片_2026-08-17_235937_669.jpg"),
+      mediaPath("02-雨林那会", "微信图片_2026-08-18_000043_936.jpg"),
     ],
   },
-  softSignal: {
-    folder: "/media/04-soft-signal",
-    items: ["/media/04-soft-signal/01-cover.mp4"],
-  },
-  fieldNotesBook: {
-    folder: "/media/05-book-field-notes",
+  graduation: {
+    folder: "03-yello-毕业那会",
     items: [
-      "/media/05-book-field-notes/01-cover.jpg",
-      "/media/05-book-field-notes/02-portrait.jpg",
-      "/media/05-book-field-notes/03-colour.jpg",
-      "/media/05-book-field-notes/04-motion.mp4",
+      mediaPath("03-yello-毕业那会", "微信图片_2026-08-18_000905_443.jpg"),
+      mediaPath("03-yello-毕业那会", "微信图片_2026-08-18_000911_809.jpg"),
+      mediaPath("03-yello-毕业那会", "微信图片_20260818000856_25_2.jpg"),
+      mediaPath("03-yello-毕业那会", "微信图片_20260818000858_27_2.jpg"),
+      mediaPath("03-yello-毕业那会", "微信图片_20260818000859_28_2.jpg"),
+      mediaPath("03-yello-毕业那会", "微信图片_20260818001253_33_2.jpg"),
+      mediaPath("03-yello-毕业那会", "微信图片_20260818001533_35_2.png"),
     ],
   },
-  distanceVolumeBook: {
-    folder: "/media/06-book-distance-volume",
+  mountain: {
+    folder: "04-上山那会",
     items: [
-      "/media/06-book-distance-volume/01-cover.jpg",
-      "/media/06-book-distance-volume/02-landscape.jpg",
-      "/media/06-book-distance-volume/03-sea.jpg",
+      mediaPath("04-上山那会", "微信图片_20260818001820_36_2.jpg"),
+      mediaPath("04-上山那会", "微信图片_20260818001821_37_2.jpg"),
+      mediaPath("04-上山那会", "微信图片_20260818001822_38_2.jpg"),
+      mediaPath("04-上山那会", "微信图片_20260818001826_41_2.jpg"),
+      mediaPath("04-上山那会", "微信图片_20260818001827_42_2.jpg"),
+      mediaPath("04-上山那会", "微信图片_20260818001828_43_2.jpg"),
+      mediaPath("04-上山那会", "微信图片_20260818001829_44_2.jpg"),
+      mediaPath("04-上山那会", "微信图片_20260818001832_46_2.jpg"),
+      mediaPath("04-上山那会", "微信图片_20260818001833_47_2.jpg"),
     ],
+  },
+  teamwork: {
+    folder: "05-teamwork",
+    items: [
+      mediaPath("05-teamwork", "微信图片_2026-08-18_002227_637.jpg"),
+      mediaPath("05-teamwork", "微信图片_2026-08-18_002259_686.jpg"),
+      mediaPath("05-teamwork", "微信图片_20260818002616_48_2.jpg"),
+      mediaPath("05-teamwork", "微信图片_20260818002617_49_2.jpg"),
+      mediaPath("05-teamwork", "微信图片_20260818002618_50_2.jpg"),
+      mediaPath("05-teamwork", "微信图片_20260818002623_52_2.jpg"),
+      mediaPath("05-teamwork", "微信图片_20260818002624_53_2.jpg"),
+      mediaPath("05-teamwork", "微信图片_20260818002626_55_2.jpg"),
+      mediaPath("05-teamwork", "微信图片_20260818002627_56_2.jpg"),
+      mediaPath("05-teamwork", "微信图片_20260818002628_57_2.jpg"),
+      mediaPath("05-teamwork", "微信图片_20260818002630_60_2.jpg"),
+      mediaPath("05-teamwork", "微信图片_20260818002633_62_2.jpg"),
+    ],
+  },
+  designPortfolio: {
+    folder: "06-book-distance-volume",
+    items: pageSequence("06-book-distance-volume", 63),
+  },
+  environmentPortfolio: {
+    folder: "07-book-field-notes",
+    items: pageSequence("07-book-field-notes", 47),
+  },
+  resume: {
+    folder: "简历",
+    items: pageSequence("简历", 2),
+    pdf: mediaPath("简历", "周小雨简历初稿.pdf"),
   },
 };
 
@@ -58,36 +108,44 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    title: "Blue Static",
-    kind: "Editorial portrait",
-    year: "2025",
-    note: "A study of distance, skin and constructed calm.",
-    color: "#1b36dc",
-    images: mediaGroups.blueStatic.items,
-  },
-  {
-    title: "Between Volumes",
-    kind: "Architecture study",
-    year: "2024",
-    note: "Concrete, temporary light and the choreography of passing bodies.",
-    color: "#d9d5ca",
-    images: mediaGroups.betweenVolumes.items,
-  },
-  {
-    title: "After the Heat",
-    kind: "Personal landscape",
+    title: "下海那会",
+    kind: "海岸 / 旅行影像",
     year: "2026",
-    note: "Notes from dry places where scale becomes difficult to read.",
-    color: "#e89942",
-    images: mediaGroups.afterTheHeat.items,
+    note: "海风、岛屿与移动中的片段，在影像里保留旅行的温度。",
+    color: "#1b36dc",
+    images: mediaGroups.downByTheSea.items,
   },
   {
-    title: "Soft Signal",
-    kind: "Moving image",
-    year: "2023—25",
-    note: "A moving portrait is allowed to remain unresolved.",
+    title: "雨林那会",
+    kind: "雨林 / 人文风景",
+    year: "2026",
+    note: "热带建筑、植物与日常光线之间的短暂相遇。",
+    color: "#173c2f",
+    images: mediaGroups.rainforest.items,
+  },
+  {
+    title: "YELLO — 毕业那会",
+    kind: "毕业季 / 视觉记录",
+    year: "2026",
+    note: "关于告别、庆祝与新阶段的明亮记录。",
+    color: "#e89942",
+    images: mediaGroups.graduation.items,
+  },
+  {
+    title: "上山那会",
+    kind: "山野 / 纪实风景",
+    year: "2026",
+    note: "在山海之间观察尺度、天气与人的位置。",
+    color: "#687665",
+    images: mediaGroups.mountain.items,
+  },
+  {
+    title: "TEAMWORK",
+    kind: "合作 / 现场记录",
+    year: "2026",
+    note: "共同创作发生时，人物、空间与细节自然形成的现场档案。",
     color: "#cd5637",
-    images: mediaGroups.softSignal.items,
+    images: mediaGroups.teamwork.items,
   },
 ];
 
@@ -97,70 +155,33 @@ export type Book = {
   edition: string;
   cover: string;
   accent: string;
-  pages: Array<{
-    left: { image?: string; label?: string; text?: string };
-    right: { image?: string; label?: string; text?: string };
-  }>;
+  pages: Array<{ image: string; label: string }>;
 };
 
-const fieldNotes = mediaGroups.fieldNotesBook.items;
-const distanceVolume = mediaGroups.distanceVolumeBook.items;
+const makeBookPages = (items: string[]) =>
+  items.map((image, index) => ({
+    image,
+    label: `Page ${String(index + 1).padStart(2, "0")}`,
+  }));
 
 export const books: Book[] = [
   {
-    title: "Field Notes 01",
-    subtitle: "Colour / People / Fragments",
-    edition: "Edition of 60 · 2025",
-    cover: fieldNotes[0],
-    accent: "#243bd7",
-    pages: [
-      {
-        left: { label: "FIELD NOTES 01", text: "Colour / People / Fragments\n2023—2025" },
-        right: { image: fieldNotes[0], label: "Plate 01" },
-      },
-      {
-        left: { image: fieldNotes[1], label: "Plate 02" },
-        right: { image: fieldNotes[2], label: "Plate 03" },
-      },
-      {
-        left: { image: fieldNotes[3], label: "Plate 04" },
-        right: {
-          label: "A NOTE ON LOOKING",
-          text: "The portrait begins after certainty ends. I leave the frame open long enough for posture to become accident.",
-        },
-      },
-      {
-        left: { image: fieldNotes[2], label: "Plate 05" },
-        right: { image: fieldNotes[0], label: "Plate 06 / End" },
-      },
-    ],
+    title: "Raina 设计作品集",
+    subtitle: "AI Product / Visual / Campaign",
+    edition: "63 pages · 2025",
+    cover: mediaGroups.designPortfolio.items[0],
+    accent: "#4f46d9",
+    pages: makeBookPages(mediaGroups.designPortfolio.items),
   },
   {
-    title: "Distance, Volume",
-    subtitle: "Structures / Deserts / Edges",
-    edition: "First edition · 2026",
-    cover: distanceVolume[0],
-    accent: "#9dff38",
-    pages: [
-      {
-        left: { label: "DISTANCE, VOLUME", text: "Structures / Deserts / Edges\n2024—2026" },
-        right: { image: distanceVolume[0], label: "Figure 01" },
-      },
-      {
-        left: { image: distanceVolume[1], label: "Figure 02" },
-        right: { image: distanceVolume[2], label: "Figure 03" },
-      },
-      {
-        left: {
-          label: "FIELD RECORD",
-          text: "Scale is never neutral. A wall can become a horizon; a body can become a mark on the weather.",
-        },
-        right: { image: distanceVolume[0], label: "Figure 04" },
-      },
-      {
-        left: { image: distanceVolume[1], label: "Figure 05" },
-        right: { image: distanceVolume[2], label: "Figure 06 / End" },
-      },
-    ],
+    title: "环境设计作品集",
+    subtitle: "Space / Architecture / Research",
+    edition: "47 pages · 2023",
+    cover: mediaGroups.environmentPortfolio.items[0],
+    accent: "#79c9ba",
+    pages: makeBookPages(mediaGroups.environmentPortfolio.items),
   },
 ];
+
+export const resumePages = mediaGroups.resume.items;
+export const resumePdf = mediaGroups.resume.pdf;

@@ -8,12 +8,19 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
   type PointerEvent as ReactPointerEvent,
 } from "react";
-import { books, mediaGroups, projects, type Book } from "./portfolio-data";
+import {
+  books,
+  mediaGroups,
+  projects,
+  resumePages,
+  resumePdf,
+  type Book,
+} from "./portfolio-data";
 
 const heroCards = [
-  { src: mediaGroups.blueStatic.items[0], alt: "Blue Static cover", className: "hero-card--one" },
-  { src: mediaGroups.betweenVolumes.items[0], alt: "Between Volumes cover", className: "hero-card--two" },
-  { src: mediaGroups.softSignal.items[0], alt: "Soft Signal moving-image cover", className: "hero-card--three" },
+  { src: mediaGroups.downByTheSea.items[0], alt: "下海那会", className: "hero-card--one" },
+  { src: mediaGroups.graduation.items[0], alt: "毕业那会", className: "hero-card--two" },
+  { src: mediaGroups.teamwork.items[0], alt: "Teamwork", className: "hero-card--three" },
 ];
 
 type HeroOffset = { x: number; y: number; rotate: number };
@@ -50,18 +57,11 @@ function PortfolioMedia({
   return <img src={src} alt={alt} draggable={draggable} />;
 }
 
-function BookPage({ page, side }: { page: Book["pages"][number]["left"]; side: "left" | "right" }) {
+function BookPage({ page }: { page: Book["pages"][number] }) {
   return (
-    <div className={`book-page book-page--${side}`}>
-      {page.image ? (
-        <PortfolioMedia src={page.image} alt={page.label ?? "Photobook page"} controls />
-      ) : (
-        <div className="book-page-copy">
-          <small>{page.label}</small>
-          <p>{page.text}</p>
-        </div>
-      )}
-      {page.image && <small className="book-page-label">{page.label}</small>}
+    <div className="book-page">
+      <PortfolioMedia src={page.image} alt={page.label} controls />
+      <small className="book-page-label">{page.label}</small>
     </div>
   );
 }
@@ -228,8 +228,8 @@ export default function Home() {
       <div className="cursor-dot" ref={cursorRef} aria-hidden="true" />
 
       <header className="site-header">
-        <a className="wordmark" href="#top" aria-label="Nian photography home">
-          NIAN®
+        <a className="wordmark" href="#top" aria-label="Raina portfolio home">
+          RAINA®
         </a>
         <nav aria-label="Primary navigation">
           <a href="#work">Selected work</a>
@@ -241,15 +241,15 @@ export default function Home() {
       </header>
 
       <section className="hero" id="top" aria-labelledby="hero-title">
-        <p className="eyebrow">Independent photographer · Shanghai / Worldwide</p>
+        <p className="eyebrow">Visual designer · Image maker · Shenzhen / Beijing</p>
         <h1 id="hero-title">
           Images before
           <br />
           <span>explanations.</span>
         </h1>
         <p className="hero-intro">
-          Portrait, object and landscape studies—built around colour, tension and the
-          small instant before a scene changes.
+          Travel, portrait and collaborative image studies—built around colour,
+          observation and the small instant before a scene changes.
         </p>
 
         <div className="hero-stage" aria-label="Draggable selected photography collage">
@@ -306,7 +306,7 @@ export default function Home() {
       <section className="work-section" id="work" aria-labelledby="work-title">
         <div className="section-heading">
           <p className="section-label">Selected work — 02</p>
-          <h2 id="work-title">Four ongoing stories</h2>
+          <h2 id="work-title">Five visual stories</h2>
           <p>Click any image to enter the series. Use arrow keys to move through it.</p>
         </div>
 
@@ -401,12 +401,12 @@ export default function Home() {
           <h2 id="about-title">Available for images, ideas and beautiful problems.</h2>
           <div className="about-copy">
             <p>
-              Nian is an independent photographer and visual designer working across
-              portraiture, editorial commissions and self-initiated books.
+            Raina / 周小雨是一名视觉设计师与影像创作者，工作横跨摄影、内容创作、
+            产品视觉与自发出版项目。
             </p>
             <p>
               For commissions, exhibitions, print enquiries or a longer conversation,
-              write to <a href="mailto:hello@nianyuan.studio">hello@nianyuan.studio</a>.
+              write to <a href="mailto:1341059849@qq.com">1341059849@qq.com</a>.
             </p>
             <button className="resume-button" type="button" onClick={() => setResumeOpen(true)}>
               Open full-screen résumé <span>↗</span>
@@ -416,10 +416,10 @@ export default function Home() {
       </section>
 
       <footer>
-        <a href="mailto:hello@nianyuan.studio">Let’s make something worth looking at.</a>
+        <a href="mailto:1341059849@qq.com">Let’s make something worth looking at.</a>
         <div>
-          <span>Shanghai · 31.2304° N</span>
-          <span>© 2026 NIAN</span>
+          <span>Shenzhen / Beijing</span>
+          <span>© 2026 RAINA</span>
           <a href="#top">Back to top ↑</a>
         </div>
       </footer>
@@ -463,7 +463,7 @@ export default function Home() {
               <span>{currentBook.edition}</span>
             </div>
             <p>
-              Spread {String(spread + 1).padStart(2, "0")} / {String(currentBook.pages.length).padStart(2, "0")}
+              Page {String(spread + 1).padStart(2, "0")} / {String(currentBook.pages.length).padStart(2, "0")}
             </p>
             <button type="button" onClick={() => setActiveBook(null)} aria-label="Close book">
               Close ×
@@ -490,9 +490,7 @@ export default function Home() {
               aria-label="Previous spread"
             />
             <div className={`open-book open-book--${turnDirection}`} key={`${activeBook}-${spread}`}>
-              <BookPage page={currentBook.pages[spread].left} side="left" />
-              <span className="book-gutter" />
-              <BookPage page={currentBook.pages[spread].right} side="right" />
+              <BookPage page={currentBook.pages[spread]} />
             </div>
             <button
               className="reader-hit reader-hit--right"
@@ -519,50 +517,14 @@ export default function Home() {
           <button className="resume-close" type="button" onClick={() => setResumeOpen(false)}>
             Close résumé ×
           </button>
-          <div className="resume-sheet">
-            <div className="resume-hero">
-              <p>Curriculum Vitae / 2026</p>
-              <h2 id="resume-title">NIAN YUAN</h2>
-              <p>Photographer · Visual Designer · Image Maker</p>
-            </div>
-            <div className="resume-columns">
-              <div>
-                <section>
-                  <h3>Profile</h3>
-                  <p>
-                    Independent photographer building vivid editorial worlds through portrait,
-                    spatial observation and print. Based in Shanghai, available worldwide.
-                  </p>
-                </section>
-                <section>
-                  <h3>Selected clients</h3>
-                  <p>Wallpaper* China · NOWNESS · Lane Crawford · Modern Weekly · Local Objects</p>
-                </section>
-                <section>
-                  <h3>Contact</h3>
-                  <p>hello@nianyuan.studio<br />Shanghai, China<br />Instagram / @nian.images</p>
-                </section>
-              </div>
-              <div>
-                <section className="resume-list">
-                  <h3>Experience</h3>
-                  <p><time>2023—Now</time><span>Independent Photographer & Art Director<br />Shanghai / Worldwide</span></p>
-                  <p><time>2021—23</time><span>Visual Designer<br />Studio Parallel, Shanghai</span></p>
-                  <p><time>2019—21</time><span>Photography Assistant<br />Multiple studios, Shanghai</span></p>
-                </section>
-                <section className="resume-list">
-                  <h3>Recognition</h3>
-                  <p><time>2026</time><span>Photobook shortlist · Distance, Volume</span></p>
-                  <p><time>2025</time><span>Emerging Image Makers · Group exhibition</span></p>
-                  <p><time>2024</time><span>Independent publishing fair · Field Notes 01</span></p>
-                </section>
-                <section>
-                  <h3>Practice</h3>
-                  <p>Photography · Art direction · Editorial design · Retouching · Print production</p>
-                </section>
-              </div>
-            </div>
+          <div className="resume-document" id="resume-title">
+            {resumePages.map((page, index) => (
+              <img src={page} alt={`周小雨简历第 ${index + 1} 页`} key={page} />
+            ))}
           </div>
+          <a className="resume-pdf-link" href={resumePdf} target="_blank" rel="noreferrer">
+            Open original PDF ↗
+          </a>
         </div>
       )}
     </main>

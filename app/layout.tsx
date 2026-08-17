@@ -7,10 +7,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "localhost:3000";
   const protocol = requestHeaders.get("x-forwarded-proto") ?? (host.includes("localhost") ? "http" : "https");
   const baseUrl = new URL(`${protocol}://${host}`);
-  const title = "NIAN — Photographer & Image Maker";
+  const title = "RAINA 周小雨 — Visual Designer & Image Maker";
   const description =
-    "Selected portrait, object and landscape photography by Nian, based in Shanghai and working worldwide.";
-  const socialImage = new URL("/og.png", baseUrl).toString();
+    "周小雨的影像与视觉设计作品集，包含旅行摄影、毕业季记录、合作现场、设计作品集与个人简历。";
+  const socialImage = new URL("/og-raina.png", baseUrl).toString();
 
   return {
     metadataBase: baseUrl,
@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       type: "website",
-      images: [{ url: socialImage, width: 1792, height: 933, alt: "NIAN — Images before explanations" }],
+      images: [{ url: socialImage, width: 1738, height: 905, alt: "RAINA 周小雨 — Visual portfolio" }],
     },
     twitter: {
       card: "summary_large_image",
