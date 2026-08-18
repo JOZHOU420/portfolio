@@ -4,6 +4,7 @@
  * Images and videos can be mixed; the UI detects common video extensions.
  */
 const mediaPath = (folder: string, file: string) => encodeURI(`/media/${folder}/${file}`);
+const imagePath = (file: string) => encodeURI(`/images/${file}`);
 
 const pageSequence = (folder: string, count: number) =>
   Array.from({ length: count }, (_, index) =>
@@ -52,7 +53,7 @@ export const mediaGroups = {
   graduation: {
     folder: "03｜从小岛毕业",
     items: [
-      mediaPath("03｜从小岛毕业", "FM3.jpg"),
+      imagePath("graduation-cover.jpg"),
       mediaPath("03｜从小岛毕业", "图1.jpg"),
       mediaPath("03｜从小岛毕业", "图2.jpg"),
       mediaPath("03｜从小岛毕业", "微信图片_2026-08-18_000905_443.jpg"),

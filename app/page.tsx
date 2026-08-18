@@ -26,7 +26,7 @@ const heroCards = [
 ];
 
 const carouselSlots = [-2, -1, 0, 1, 2] as const;
-const bookTurnDuration = 680;
+const bookTurnDuration = 560;
 
 type HeroOffset = { x: number; y: number; rotate: number };
 type LightboxState = { project: number; image: number } | null;
@@ -72,7 +72,7 @@ function PortfolioMedia({
 function BookPage({ page }: { page: Book["pages"][number] }) {
   return (
     <div className="book-page">
-      <PortfolioMedia src={page.image} alt={page.label} controls />
+      <img src={page.image} alt={page.label} draggable={false} />
     </div>
   );
 }
@@ -122,6 +122,16 @@ export default function Home() {
     },
     [],
   );
+
+  useEffect(() => {
+    if (activeBook === null) return;
+    const pageItems = books[activeBook].pages;
+    [spread - 1, spread + 1].forEach((pageIndex) => {
+      if (pageIndex < 0 || pageIndex >= pageItems.length) return;
+      const preloadImage = new Image();
+      preloadImage.src = pageItems[pageIndex].image;
+    });
+  }, [activeBook, spread]);
 
   useEffect(() => {
     const onKeyDown = (event: globalThis.KeyboardEvent) => {
@@ -259,23 +269,27 @@ export default function Home() {
     setActiveBook(null);
   };
 
-  const turnBook = (direction: "next" | "prev") => {
+  function finishBookTurn() {
+    if (bookTurnTimer.current) clearTimeout(bookTurnTimer.current);
+    bookTurningRef.current = false;
+    setBookTurning(false);
+    bookTurnTimer.current = null;
+  }
+
+  function turnBook(direction: "next" | "prev") {
     if (activeBook === null || bookTurningRef.current) return;
     const last = books[activeBook].pages.length - 1;
-    const next = direction === "next" ? Math.min(last, spread + 1) : Math.max(0, spread - 1);
-    if (next === spread) return;
-    bookTurningRef.current = true;
-    setBookTurning(true);
-    setTurnDirection(direction);
-    setPreviousSpread(spread);
-    setSpread(next);
-    bookTurnTimer.current = setTimeout(() => {
-      bookTurningRef.current = false;
-      setPreviousSpread(next);
-      setBookTurning(false);
-      bookTurnTimer.current = null;
-    }, bookTurnDuration);
-  };
+    setSpread((currentSpread) => {
+      const next = direction === "next" ? Math.min(last, currentSpread + 1) : Math.max(0, currentSpread - 1);
+      if (next === currentSpread) return currentSpread;
+      bookTurningRef.current = true;
+      setBookTurning(true);
+      setTurnDirection(direction);
+      setPreviousSpread(currentSpread);
+      bookTurnTimer.current = setTimeout(finishBookTurn, bookTurnDuration + 160);
+      return next;
+    });
+  }
 
   const activeProject = lightbox ? projects[lightbox.project] : null;
   const currentBook = activeBook !== null ? books[activeBook] : null;
@@ -596,7 +610,9 @@ export default function Home() {
               onClick={() => turnBook("prev")}
               disabled={spread === 0 || bookTurning}
               aria-label="Previous spread"
-            />
+            >
+              <span aria-hidden="true">←</span>
+            </button>
             <div className="open-book">
               <div className="book-under-page" aria-hidden="true">
                 <BookPage page={currentBook.pages[spread]} />
@@ -605,6 +621,7 @@ export default function Home() {
                 <div
                   className={`book-turning-sheet book-turning-sheet--${turnDirection}`}
                   key={`${activeBook}-${spread}-${turnDirection}`}
+                  onAnimationEnd={finishBookTurn}
                 >
                   <div className="book-sheet-face book-sheet-face--front">
                     <BookPage page={currentBook.pages[previousSpread]} />
@@ -620,7 +637,9 @@ export default function Home() {
               onClick={() => turnBook("next")}
               disabled={spread === currentBook.pages.length - 1 || bookTurning}
               aria-label="Next spread"
-            />
+            >
+              <span aria-hidden="true">→</span>
+            </button>
           </div>
           <div className="reader-controls">
             <button type="button" onClick={() => turnBook("prev")} disabled={spread === 0 || bookTurning}>
