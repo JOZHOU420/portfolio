@@ -53,7 +53,7 @@ export const mediaGroups = {
   graduation: {
     folder: "03｜从小岛毕业",
     items: [
-      imagePath("graduation-cover.jpg"),
+      imagePath("graduation-cover-v3.jpg"),
       mediaPath("03｜从小岛毕业", "图1.jpg"),
       mediaPath("03｜从小岛毕业", "图2.jpg"),
       mediaPath("03｜从小岛毕业", "微信图片_2026-08-18_000905_443.jpg"),

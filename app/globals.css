@@ -1101,6 +1101,24 @@ footer div {
   transform: translate3d(0, 0, 0);
 }
 
+.book-under-page--next {
+  animation: bookPageInNext 220ms ease-out both;
+}
+
+.book-under-page--prev {
+  animation: bookPageInPrev 220ms ease-out both;
+}
+
+@keyframes bookPageInNext {
+  from { opacity: 0.45; transform: translate3d(14px, 0, 0) scale(0.998); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+@keyframes bookPageInPrev {
+  from { opacity: 0.45; transform: translate3d(-14px, 0, 0) scale(0.998); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
 .book-turning-sheet {
   z-index: 2;
   overflow: visible;

@@ -26,13 +26,13 @@ const heroCards = [
 ];
 
 const carouselSlots = [-2, -1, 0, 1, 2] as const;
-const bookTurnDuration = 560;
 
 type HeroOffset = { x: number; y: number; rotate: number };
 type LightboxState = { project: number; image: number } | null;
 
 const isVideo = (src: string) => /\.(mp4|webm|ogg)(?:[?#].*)?$/i.test(src);
 const wrapIndex = (index: number, total: number) => ((index % total) + total) % total;
+const bookPreviewSrc = (src: string) => src.replace("/pages/", "/previews/");
 
 function PortfolioMedia({
   src,
@@ -70,9 +70,18 @@ function PortfolioMedia({
 }
 
 function BookPage({ page }: { page: Book["pages"][number] }) {
+  const preview = bookPreviewSrc(page.image);
   return (
     <div className="book-page">
-      <img src={page.image} alt={page.label} draggable={false} />
+      <img
+        src={page.image}
+        srcSet={`${preview} 1200w, ${page.image} 2400w`}
+        sizes="(max-width: 620px) 94vw, min(90vw, 1420px)"
+        alt={page.label}
+        draggable={false}
+        decoding="async"
+        fetchPriority="high"
+      />
     </div>
   );
 }
@@ -88,9 +97,7 @@ export default function Home() {
   const [lightbox, setLightbox] = useState<LightboxState>(null);
   const [activeBook, setActiveBook] = useState<number | null>(null);
   const [spread, setSpread] = useState(0);
-  const [previousSpread, setPreviousSpread] = useState(0);
   const [turnDirection, setTurnDirection] = useState<"next" | "prev">("next");
-  const [bookTurning, setBookTurning] = useState(false);
   const [galleryDirection, setGalleryDirection] = useState<"next" | "prev">("next");
   const [resumeOpen, setResumeOpen] = useState(false);
   const [indexHover, setIndexHover] = useState(0);
@@ -104,8 +111,6 @@ export default function Home() {
   } | null>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
   const bookSwipeStart = useRef<number | null>(null);
-  const bookTurningRef = useRef(false);
-  const bookTurnTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const hasOverlay = Boolean(lightbox) || activeBook !== null || resumeOpen;
 
@@ -116,20 +121,13 @@ export default function Home() {
     };
   }, [hasOverlay]);
 
-  useEffect(
-    () => () => {
-      if (bookTurnTimer.current) clearTimeout(bookTurnTimer.current);
-    },
-    [],
-  );
-
   useEffect(() => {
     if (activeBook === null) return;
     const pageItems = books[activeBook].pages;
-    [spread - 1, spread + 1].forEach((pageIndex) => {
+    [spread - 2, spread - 1, spread + 1, spread + 2].forEach((pageIndex) => {
       if (pageIndex < 0 || pageIndex >= pageItems.length) return;
       const preloadImage = new Image();
-      preloadImage.src = pageItems[pageIndex].image;
+      preloadImage.src = bookPreviewSrc(pageItems[pageIndex].image);
     });
   }, [activeBook, spread]);
 
@@ -253,41 +251,21 @@ export default function Home() {
   };
 
   const openBook = (index: number) => {
-    if (bookTurnTimer.current) clearTimeout(bookTurnTimer.current);
-    bookTurningRef.current = false;
-    setBookTurning(false);
     setActiveBook(index);
     setSpread(0);
-    setPreviousSpread(0);
     setTurnDirection("next");
   };
 
   const closeBook = () => {
-    if (bookTurnTimer.current) clearTimeout(bookTurnTimer.current);
-    bookTurningRef.current = false;
-    setBookTurning(false);
     setActiveBook(null);
   };
 
-  function finishBookTurn() {
-    if (bookTurnTimer.current) clearTimeout(bookTurnTimer.current);
-    bookTurningRef.current = false;
-    setBookTurning(false);
-    bookTurnTimer.current = null;
-  }
-
   function turnBook(direction: "next" | "prev") {
-    if (activeBook === null || bookTurningRef.current) return;
+    if (activeBook === null) return;
     const last = books[activeBook].pages.length - 1;
+    setTurnDirection(direction);
     setSpread((currentSpread) => {
-      const next = direction === "next" ? Math.min(last, currentSpread + 1) : Math.max(0, currentSpread - 1);
-      if (next === currentSpread) return currentSpread;
-      bookTurningRef.current = true;
-      setBookTurning(true);
-      setTurnDirection(direction);
-      setPreviousSpread(currentSpread);
-      bookTurnTimer.current = setTimeout(finishBookTurn, bookTurnDuration + 160);
-      return next;
+      return direction === "next" ? Math.min(last, currentSpread + 1) : Math.max(0, currentSpread - 1);
     });
   }
 
@@ -608,45 +586,37 @@ export default function Home() {
               className="reader-hit reader-hit--left"
               type="button"
               onClick={() => turnBook("prev")}
-              disabled={spread === 0 || bookTurning}
+              disabled={spread === 0}
               aria-label="Previous spread"
             >
               <span aria-hidden="true">←</span>
             </button>
             <div className="open-book">
-              <div className="book-under-page" aria-hidden="true">
+              <div
+                className={`book-under-page book-under-page--${turnDirection}`}
+                key={`${activeBook}-${spread}`}
+                aria-hidden="true"
+              >
                 <BookPage page={currentBook.pages[spread]} />
               </div>
-              {previousSpread !== spread && (
-                <div
-                  className={`book-turning-sheet book-turning-sheet--${turnDirection}`}
-                  key={`${activeBook}-${spread}-${turnDirection}`}
-                  onAnimationEnd={finishBookTurn}
-                >
-                  <div className="book-sheet-face book-sheet-face--front">
-                    <BookPage page={currentBook.pages[previousSpread]} />
-                  </div>
-                  <div className="book-sheet-face book-sheet-face--back" aria-hidden="true" />
-                </div>
-              )}
               <span className="book-page-edge" aria-hidden="true" />
             </div>
             <button
               className="reader-hit reader-hit--right"
               type="button"
               onClick={() => turnBook("next")}
-              disabled={spread === currentBook.pages.length - 1 || bookTurning}
+              disabled={spread === currentBook.pages.length - 1}
               aria-label="Next spread"
             >
               <span aria-hidden="true">→</span>
             </button>
           </div>
           <div className="reader-controls">
-            <button type="button" onClick={() => turnBook("prev")} disabled={spread === 0 || bookTurning}>
+            <button type="button" onClick={() => turnBook("prev")} disabled={spread === 0}>
               ← 上一页
             </button>
             <p>点击页面左右两侧 · 左右滑动 · 或使用方向键</p>
-            <button type="button" onClick={() => turnBook("next")} disabled={spread === currentBook.pages.length - 1 || bookTurning}>
+            <button type="button" onClick={() => turnBook("next")} disabled={spread === currentBook.pages.length - 1}>
               下一页 →
             </button>
           </div>
