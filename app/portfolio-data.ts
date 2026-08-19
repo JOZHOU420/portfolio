@@ -105,7 +105,7 @@ export const mediaGroups = {
   resume: {
     folder: "简历",
     items: pageSequence("简历", 2),
-    pdf: mediaPath("简历", "周小雨简历初稿.pdf"),
+    pdf: mediaPath("简历", "周小雨.pdf"),
   },
 };
 
