@@ -37,6 +37,12 @@ test("server-renders the finished portfolio with its stylesheet", async () => {
   assert.match(html, /Five visual stories/);
   assert.match(html, /从小岛毕业/);
   assert.match(html, /\/images\/graduation-cover-v3\.jpg/);
+  assert.match(html, /PART 1/);
+  assert.match(html, /PART 2/);
+  assert.match(html, /夏日倒带/);
+  assert.match(html, /诛仙台/);
+  assert.match(html, /Girlhood/);
+  assert.match(html, /\/media\/video-works\/01-summer-rewind\/main\.mp4/);
   assert.match(html, /Portfolio<br\/>过往设计作品集/);
   assert.doesNotMatch(html, /codex-preview|Building your site|react-loading-skeleton/i);
 });
@@ -50,6 +56,8 @@ test("ships the portfolio design rules in the production CSS bundle", async () =
   assert.match(css, /\.site-header\{/);
   assert.match(css, /\.hero\{/);
   assert.match(css, /\.project-grid\{/);
+  assert.match(css, /\.video-section\{/);
+  assert.match(css, /\.video-work\{/);
   assert.match(css, /\.book-reader\{/);
   assert.match(css, /--paper:#f0eee8/);
 });

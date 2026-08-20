@@ -606,7 +606,7 @@ img {
 }
 
 .index-intro {
-  width: min(1250px, 92vw);
+  width: min(1100px, 92vw);
   margin: 8vh auto 0;
   font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(34px, 4.6vw, 78px);
@@ -616,9 +616,46 @@ img {
   text-align: center;
 }
 
-.index-intro span {
+.index-part {
+  margin-top: 12vh;
+}
+
+.index-part + .index-part {
+  margin-top: 17vh;
+  border-top: 1px solid var(--ink);
+  padding-top: 18px;
+}
+
+.index-part-heading {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) 2fr;
+  gap: 24px;
+  align-items: end;
+}
+
+.index-part-heading p {
+  margin: 0;
+}
+
+.index-part-heading p:first-child {
+  font-size: clamp(30px, 4vw, 66px);
+  line-height: 0.92;
+  letter-spacing: -0.055em;
+}
+
+.index-part-heading p:first-child span {
   display: block;
-  white-space: nowrap;
+  margin-bottom: 9px;
+  font-size: 9px;
+  line-height: 1;
+  letter-spacing: 0.13em;
+}
+
+.index-part-heading p:last-child {
+  max-width: 520px;
+  justify-self: end;
+  font-size: clamp(15px, 1.45vw, 23px);
+  line-height: 1.35;
 }
 
 .index-layout {
@@ -682,6 +719,11 @@ img {
   animation: previewIn 450ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.index-preview--video video {
+  aspect-ratio: 16 / 10;
+  background: #090a09;
+}
+
 .index-preview figcaption {
   max-width: 340px;
   margin-top: 10px;
@@ -691,6 +733,209 @@ img {
 
 @keyframes previewIn {
   from { opacity: 0; transform: translateY(16px); }
+}
+
+.video-section {
+  overflow: hidden;
+  padding: 30px 28px 14vh;
+  color: #f4f2eb;
+  background: #080908;
+}
+
+.video-section-heading {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 24px;
+  align-items: start;
+  border-top: 1px solid rgb(244 242 235 / 0.45);
+  padding-top: 12px;
+}
+
+.video-section-heading h2 {
+  grid-column: 2;
+  max-width: 960px;
+  margin: 0;
+  font-size: clamp(56px, 8vw, 126px);
+  font-weight: 400;
+  line-height: 0.87;
+  letter-spacing: -0.07em;
+}
+
+.video-section-heading > p:last-child {
+  max-width: 280px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.video-projects {
+  display: grid;
+  gap: 1px;
+  margin-top: 16vh;
+  background: rgb(216 255 38 / 0.45);
+}
+
+.video-work {
+  display: grid;
+  grid-template-columns: minmax(0, 2.25fr) minmax(280px, 0.75fr);
+  grid-template-areas:
+    "stage copy"
+    "assets assets";
+  gap: clamp(24px, 3vw, 54px);
+  min-height: 100svh;
+  padding: clamp(22px, 2.4vw, 44px) 0 clamp(42px, 6vw, 96px);
+  background: #080908;
+}
+
+.video-work--split {
+  grid-template-columns: minmax(280px, 0.72fr) minmax(0, 2.28fr);
+  grid-template-areas:
+    "copy stage"
+    "assets stage";
+  align-items: start;
+}
+
+.video-work-copy {
+  grid-area: copy;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.video-work-number {
+  margin: 0 0 clamp(28px, 6vh, 72px);
+  color: #d8ff26;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+}
+
+.video-work-copy h3 {
+  margin: 0;
+  font-size: clamp(52px, 6.2vw, 118px);
+  font-weight: 600;
+  line-height: 0.84;
+  letter-spacing: -0.07em;
+}
+
+.video-work-copy h3 span,
+.video-work-copy h3 em {
+  display: block;
+}
+
+.video-work-copy h3 em {
+  color: #d8ff26;
+  font-style: normal;
+}
+
+.video-work-about {
+  margin-top: clamp(50px, 8vh, 110px);
+}
+
+.video-work-about strong,
+.video-work-tools strong,
+.video-assets > p {
+  color: #d8ff26;
+  font-size: clamp(15px, 1.3vw, 22px);
+  letter-spacing: -0.02em;
+}
+
+.video-work-about p,
+.video-work-tools p {
+  margin: 13px 0 0;
+  color: rgb(244 242 235 / 0.78);
+  white-space: pre-line;
+  font-size: clamp(14px, 1.25vw, 21px);
+  line-height: 1.8;
+}
+
+.video-work-tools {
+  margin-top: auto;
+  padding-top: 44px;
+}
+
+.video-work-stage {
+  grid-area: stage;
+  display: grid;
+  gap: 20px;
+  align-content: start;
+}
+
+.video-work-stage figure {
+  position: relative;
+  margin: 0;
+}
+
+.video-work-stage video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2206 / 946;
+  border-radius: clamp(10px, 1vw, 18px);
+  background: #111;
+  box-shadow: 0 28px 90px rgb(0 0 0 / 0.36);
+  object-fit: cover;
+}
+
+.video-work--split .video-work-stage video {
+  aspect-ratio: 16 / 9;
+}
+
+.video-work-stage figcaption {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  padding: 7px 9px;
+  border-radius: 999px;
+  color: #080908;
+  background: #d8ff26;
+  font-size: 8px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.video-assets {
+  grid-area: assets;
+  min-width: 0;
+}
+
+.video-assets > p {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 12px;
+}
+
+.video-assets > p span {
+  font-size: 9px;
+  letter-spacing: 0.13em;
+}
+
+.video-assets > div {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 5px;
+}
+
+.video-assets figure {
+  margin: 0;
+  overflow: hidden;
+  border-radius: clamp(7px, 0.7vw, 13px);
+  background: #191a18;
+}
+
+.video-assets img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  transition: filter 420ms ease, transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.video-assets figure:hover img {
+  filter: saturate(1.08);
+  transform: scale(1.035);
+}
+
+.video-work--split .video-assets > div {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .books-section {
@@ -1523,7 +1768,7 @@ footer div {
   .hero-intro { left: 16px; bottom: 25px; width: 64vw; }
   .hero-index { right: 16px; bottom: 25px; width: 100px; text-align: right; }
   .scroll-cue { display: none; }
-  .manifesto, .work-section, .books-section, .about-section, footer { padding-right: 16px; padding-left: 16px; }
+  .manifesto, .work-section, .video-section, .books-section, .about-section, footer { padding-right: 16px; padding-left: 16px; }
   .manifesto-copy { margin-top: 18vh; font-size: 11.8vw; }
   .manifesto-copy-zh { width: min(620px, 84vw); margin-top: -72px; }
   .section-heading, .books-heading { grid-template-columns: 1fr; }
@@ -1541,6 +1786,26 @@ footer div {
   .index-preview { display: none; }
   .index-row { grid-template-columns: 32px 1fr auto; }
   .index-row span:nth-child(3) { display: none; }
+  .index-part-heading { grid-template-columns: 1fr; }
+  .index-part-heading p:last-child { justify-self: start; }
+  .video-section-heading { grid-template-columns: 1fr; }
+  .video-section-heading h2 { grid-column: 1; margin-top: 8vh; }
+  .video-section-heading > p:last-child { margin-top: 22px; }
+  .video-work,
+  .video-work--split {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "copy"
+      "stage"
+      "assets";
+    min-height: 0;
+    gap: 38px;
+    padding-top: 54px;
+  }
+  .video-work-tools { margin-top: 0; }
+  .video-work-stage { gap: 14px; }
+  .video-work--split .video-work-stage video { aspect-ratio: 16 / 9; }
+  .video-work--split .video-assets > div { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .book-shelf { gap: 16px; width: 100%; }
   .book-object { height: auto; }
   .about-grid { grid-template-columns: 1fr; }
@@ -1560,6 +1825,9 @@ footer div {
   .manifesto-copy { margin-bottom: 100px; }
   .manifesto-copy-zh { width: 92%; margin-top: -72px; font-size: 13px; }
   .index-intro { width: 100%; margin: 7vh auto 0; font-size: 6.3vw; line-height: 1.02; }
+  .index-part { margin-top: 10vh; }
+  .index-part + .index-part { margin-top: 12vh; }
+  .index-part-heading p:first-child { font-size: 9vw; }
   .section-heading h2, .books-heading h2, .about-grid h2 { font-size: 14.5vw; }
   .section-heading { margin-bottom: 8vh; }
   .project-card--1, .project-card--2, .project-card--3, .project-card--4, .project-card--5 {
@@ -1572,6 +1840,14 @@ footer div {
   .project-meta { grid-template-columns: 30px 1fr auto; }
   .project-meta h3 { font-size: 26px; }
   .index-list strong { font-size: 25px; }
+  .video-section { padding-bottom: 9vh; }
+  .video-section-heading h2 { font-size: 14.5vw; }
+  .video-projects { margin-top: 11vh; }
+  .video-work-copy h3 { font-size: 16vw; }
+  .video-work-about { margin-top: 44px; }
+  .video-work-about p, .video-work-tools p { font-size: 14px; line-height: 1.65; }
+  .video-assets > div,
+  .video-work--split .video-assets > div { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .book-shelf { grid-template-columns: 1fr; width: 78vw; gap: 10vh; }
   .book-object { height: auto; }
   .books-section { min-height: auto; }

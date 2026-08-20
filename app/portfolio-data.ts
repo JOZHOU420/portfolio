@@ -161,6 +161,113 @@ export const projects: Project[] = [
   },
 ];
 
+export type VideoWork = {
+  id: string;
+  title: string;
+  titleLead: string;
+  titleAccent?: string;
+  kind: string;
+  year: string;
+  summary: string;
+  about: string[];
+  tools: string;
+  layout: "wide" | "split";
+  videos: Array<{ src: string; poster: string; label: string }>;
+  assets: string[];
+};
+
+const videoWorkPath = (folder: string, file: string) =>
+  mediaPath(`video-works/${folder}`, file);
+
+export const videoWorks: VideoWork[] = [
+  {
+    id: "summer-rewind",
+    title: "レモンの木下，夏日倒带",
+    titleLead: "レモンの木下，",
+    titleAccent: "夏日倒带",
+    kind: "AI 叙事影像 / 青春",
+    year: "2026",
+    summary: "柠檬树、旧磁带与一段没有说出口的夏日心事。",
+    about: [
+      "柠檬树摇晃着风与阳光，",
+      "旧磁带转过漫长蝉鸣，",
+      "也反复播放着少年未曾说出口的喜欢。",
+    ],
+    tools: "Seedance 2.5 · GPT Image 2",
+    layout: "wide",
+    videos: [
+      {
+        src: videoWorkPath("01-summer-rewind", "main.mp4"),
+        poster: videoWorkPath("01-summer-rewind", "poster.jpg"),
+        label: "《レモンの木下，夏日倒带》正片",
+      },
+    ],
+    assets: Array.from({ length: 8 }, (_, index) =>
+      videoWorkPath("01-summer-rewind", `asset-${String(index + 1).padStart(2, "0")}.png`),
+    ),
+  },
+  {
+    id: "zhuxiantai",
+    title: "诛仙台",
+    titleLead: "诛仙台",
+    kind: "AI 叙事影像 / 仙侠",
+    year: "2026",
+    summary: "寒冰锁链封住仙骨，也把三界推向旧秩序崩塌的一刻。",
+    about: [
+      "她被缚于云海之上的诛仙台，",
+      "寒冰锁链封住仙骨。",
+      "两位帝王隔岸观局，",
+      "却不知她睁眼之时，",
+      "便是三界旧秩序崩塌之日。",
+    ],
+    tools: "Seedance 2.0 · NanoBanana 2",
+    layout: "split",
+    videos: [
+      {
+        src: videoWorkPath("02-zhuxiantai", "main-01.mp4"),
+        poster: videoWorkPath("02-zhuxiantai", "poster-01.jpg"),
+        label: "《诛仙台》片段一",
+      },
+      {
+        src: videoWorkPath("02-zhuxiantai", "main-02.mp4"),
+        poster: videoWorkPath("02-zhuxiantai", "poster-02.jpg"),
+        label: "《诛仙台》片段二",
+      },
+    ],
+    assets: Array.from({ length: 4 }, (_, index) =>
+      videoWorkPath("02-zhuxiantai", `asset-${String(index + 1).padStart(2, "0")}.png`),
+    ),
+  },
+  {
+    id: "girlhood-dreamcore",
+    title: "Girlhood Dreamcore",
+    titleLead: "Girlhood",
+    titleAccent: "Dreamcore",
+    kind: "AI 视觉影像 / Dreamcore",
+    year: "2026",
+    summary: "从草莓奶油般的梦出发，穿过蛋糕花园、云海与盛夏沙滩。",
+    about: [
+      "她从草莓奶油般的梦中醒来，",
+      "穿过失重的蛋糕花园与云海，",
+      "坠落在盛夏沙滩。",
+      "海风吹散幻境——仿佛这一切，",
+      "才刚刚开始。",
+    ],
+    tools: "Seedance 2.5 · GPT Image 2",
+    layout: "wide",
+    videos: [
+      {
+        src: videoWorkPath("03-girlhood-dreamcore", "main.mp4"),
+        poster: videoWorkPath("03-girlhood-dreamcore", "poster.jpg"),
+        label: "《Girlhood Dreamcore》正片",
+      },
+    ],
+    assets: Array.from({ length: 6 }, (_, index) =>
+      videoWorkPath("03-girlhood-dreamcore", `asset-${String(index + 1).padStart(2, "0")}.png`),
+    ),
+  },
+];
+
 export type Book = {
   title: string;
   subtitle: string;

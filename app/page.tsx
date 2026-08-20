@@ -14,6 +14,7 @@ import {
   projects,
   resumePages,
   resumePdf,
+  videoWorks,
   type Book,
 } from "./portfolio-data";
 
@@ -101,6 +102,7 @@ export default function Home() {
   const [galleryDirection, setGalleryDirection] = useState<"next" | "prev">("next");
   const [resumeOpen, setResumeOpen] = useState(false);
   const [indexHover, setIndexHover] = useState(0);
+  const [videoIndexHover, setVideoIndexHover] = useState(0);
   const dragRef = useRef<{
     index: number;
     pointerId: number;
@@ -358,37 +360,78 @@ export default function Home() {
       <section className="work-section" id="work" aria-labelledby="work-title">
         <div className="project-index project-index--lead" aria-label="Project index">
           <p className="section-label">INDEX / HOVER TO PREVIEW</p>
-          <p className="index-intro">
-            <span>五组摄影作品，记录五个</span>
-            <span>从日常生活里拾起的片段。</span>
-          </p>
-          <div className="index-layout">
-            <div className="index-list">
-              {projects.map((project, projectIndex) => (
-                <div
-                  className="index-row"
-                  key={project.title}
-                  onMouseEnter={() => {
-                    setIndexHover(projectIndex);
-                  }}
-                  onFocus={() => setIndexHover(projectIndex)}
-                  tabIndex={0}
-                >
-                  <span>0{projectIndex + 1}</span>
-                  <strong>{project.title}</strong>
-                  <span>{project.kind}</span>
-                  <span>{project.year}</span>
-                </div>
-              ))}
+          <p className="index-intro">从日常取景，也让想象开始流动。</p>
+
+          <div className="index-part">
+            <div className="index-part-heading">
+              <p><span>PART 1</span> 拍摄作品</p>
+              <p>五组摄影作品，记录五个从日常生活里拾起的片段。</p>
             </div>
-            <figure className="index-preview">
-              <PortfolioMedia
-                key={projects[indexHover].images[1] ?? projects[indexHover].images[0]}
-                src={projects[indexHover].images[1] ?? projects[indexHover].images[0]}
-                alt={`${projects[indexHover].title} preview`}
-              />
-              <figcaption>{projects[indexHover].note}</figcaption>
-            </figure>
+            <div className="index-layout">
+              <div className="index-list">
+                {projects.map((project, projectIndex) => (
+                  <div
+                    className="index-row"
+                    key={project.title}
+                    onMouseEnter={() => setIndexHover(projectIndex)}
+                    onFocus={() => setIndexHover(projectIndex)}
+                    tabIndex={0}
+                  >
+                    <span>0{projectIndex + 1}</span>
+                    <strong>{project.title}</strong>
+                    <span>{project.kind}</span>
+                    <span>{project.year}</span>
+                  </div>
+                ))}
+              </div>
+              <figure className="index-preview">
+                <PortfolioMedia
+                  key={projects[indexHover].images[1] ?? projects[indexHover].images[0]}
+                  src={projects[indexHover].images[1] ?? projects[indexHover].images[0]}
+                  alt={`${projects[indexHover].title} preview`}
+                />
+                <figcaption>{projects[indexHover].note}</figcaption>
+              </figure>
+            </div>
+          </div>
+
+          <div className="index-part index-part--video">
+            <div className="index-part-heading">
+              <p><span>PART 2</span> 视频作品</p>
+              <p>三组 AI 视频作品，将图像概念延展为流动叙事。</p>
+            </div>
+            <div className="index-layout">
+              <div className="index-list">
+                {videoWorks.map((work, workIndex) => (
+                  <div
+                    className="index-row"
+                    key={work.id}
+                    onMouseEnter={() => setVideoIndexHover(workIndex)}
+                    onFocus={() => setVideoIndexHover(workIndex)}
+                    tabIndex={0}
+                  >
+                    <span>0{workIndex + 1}</span>
+                    <strong>{work.title}</strong>
+                    <span>{work.kind}</span>
+                    <span>{work.year}</span>
+                  </div>
+                ))}
+              </div>
+              <figure className="index-preview index-preview--video">
+                <video
+                  key={videoWorks[videoIndexHover].videos[0].src}
+                  src={videoWorks[videoIndexHover].videos[0].src}
+                  poster={videoWorks[videoIndexHover].videos[0].poster}
+                  aria-label={`${videoWorks[videoIndexHover].title} preview`}
+                  muted
+                  autoPlay
+                  loop
+                  playsInline
+                  preload="metadata"
+                />
+                <figcaption>{videoWorks[videoIndexHover].summary}</figcaption>
+              </figure>
+            </div>
           </div>
         </div>
 
@@ -432,9 +475,76 @@ export default function Home() {
 
       </section>
 
+      <section className="video-section" aria-labelledby="video-work-title">
+        <header className="video-section-heading">
+          <p className="section-label">PART 2 — AI VIDEO WORKS / 03</p>
+          <h2 id="video-work-title">Moving images,<br />made with AI.</h2>
+          <p>三个 AI 视频作品，从角色、场景与叙事概念出发，构建可被观看的视觉世界。</p>
+        </header>
+
+        <div className="video-projects">
+          {videoWorks.map((work, workIndex) => (
+            <article
+              className={`video-work video-work--${workIndex + 1} video-work--${work.layout}`}
+              key={work.id}
+            >
+              <div className="video-work-copy">
+                <p className="video-work-number">VIDEO / 0{workIndex + 1}</p>
+                <h3>
+                  <span>{work.titleLead}</span>
+                  {work.titleAccent && <em>{work.titleAccent}</em>}
+                </h3>
+                <div className="video-work-about">
+                  <strong>About :</strong>
+                  <p>{work.about.join("\n")}</p>
+                </div>
+                <div className="video-work-tools">
+                  <strong>tool :</strong>
+                  <p>{work.tools}</p>
+                </div>
+              </div>
+
+              <div className="video-work-stage">
+                {work.videos.map((video, videoIndex) => (
+                  <figure key={video.src}>
+                    <video
+                      src={video.src}
+                      poster={video.poster}
+                      aria-label={video.label}
+                      controls
+                      playsInline
+                      preload="metadata"
+                    />
+                    {work.videos.length > 1 && (
+                      <figcaption>Scene {String(videoIndex + 1).padStart(2, "0")}</figcaption>
+                    )}
+                  </figure>
+                ))}
+              </div>
+
+              <div className="video-assets">
+                <p>ASSETS <span>{String(work.assets.length).padStart(2, "0")}</span></p>
+                <div>
+                  {work.assets.map((asset, assetIndex) => (
+                    <figure key={asset}>
+                      <img
+                        src={asset}
+                        alt={`${work.title} 视觉素材 ${assetIndex + 1}`}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </figure>
+                  ))}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section className="books-section" id="books" aria-labelledby="books-title">
         <div className="books-heading">
-          <p className="section-label">Printed matter — 03</p>
+          <p className="section-label">Printed matter — 04</p>
           <h2 id="books-title">
             Portfolio
             <br />
@@ -460,7 +570,7 @@ export default function Home() {
       </section>
 
       <section className="about-section" id="about" aria-labelledby="about-title">
-        <p className="section-label">Information — 04</p>
+        <p className="section-label">Information — 05</p>
         <div className="about-grid">
           <h2 id="about-title">Available for images, ideas and beautiful problems.</h2>
           <div className="about-copy">
