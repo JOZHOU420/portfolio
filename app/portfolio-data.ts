@@ -202,15 +202,15 @@ export const videoWorks: VideoWork[] = [
         label: "《レモンの木下，夏日倒带》正片",
       },
     ],
-    assets: Array.from({ length: 8 }, (_, index) =>
-      videoWorkPath("01-summer-rewind", `asset-${String(index + 1).padStart(2, "0")}.png`),
+    assets: [8, 7, 1, 2, 3, 4, 5, 6].map((index) =>
+      videoWorkPath("01-summer-rewind", `asset-${String(index).padStart(2, "0")}.webp`),
     ),
   },
   {
     id: "zhuxiantai",
     title: "诛仙台",
     titleLead: "诛仙台",
-    kind: "AI 叙事影像 / 仙侠",
+    kind: "AI 3D漫剧 / 古装仙侠",
     year: "2026",
     summary: "寒冰锁链封住仙骨，也把三界推向旧秩序崩塌的一刻。",
     about: [
@@ -224,18 +224,18 @@ export const videoWorks: VideoWork[] = [
     layout: "split",
     videos: [
       {
-        src: videoWorkPath("02-zhuxiantai", "main-01.mp4"),
-        poster: videoWorkPath("02-zhuxiantai", "poster-01.jpg"),
-        label: "《诛仙台》片段一",
-      },
-      {
         src: videoWorkPath("02-zhuxiantai", "main-02.mp4"),
         poster: videoWorkPath("02-zhuxiantai", "poster-02.jpg"),
-        label: "《诛仙台》片段二",
+        label: "《诛仙台》召唤片段",
+      },
+      {
+        src: videoWorkPath("02-zhuxiantai", "main-01.mp4"),
+        poster: videoWorkPath("02-zhuxiantai", "poster-01.jpg"),
+        label: "《诛仙台》主场景片段",
       },
     ],
-    assets: Array.from({ length: 4 }, (_, index) =>
-      videoWorkPath("02-zhuxiantai", `asset-${String(index + 1).padStart(2, "0")}.png`),
+    assets: [2, 3, 4, 1].map((index) =>
+      videoWorkPath("02-zhuxiantai", `asset-${String(index).padStart(2, "0")}.webp`),
     ),
   },
   {
@@ -243,7 +243,7 @@ export const videoWorks: VideoWork[] = [
     title: "Girlhood Dreamcore",
     titleLead: "Girlhood",
     titleAccent: "Dreamcore",
-    kind: "AI 视觉影像 / Dreamcore",
+    kind: "AI MV影像 / 梦核",
     year: "2026",
     summary: "从草莓奶油般的梦出发，穿过蛋糕花园、云海与盛夏沙滩。",
     about: [
@@ -262,8 +262,8 @@ export const videoWorks: VideoWork[] = [
         label: "《Girlhood Dreamcore》正片",
       },
     ],
-    assets: Array.from({ length: 6 }, (_, index) =>
-      videoWorkPath("03-girlhood-dreamcore", `asset-${String(index + 1).padStart(2, "0")}.png`),
+    assets: [4, 5, 6, 1, 2, 3].map((index) =>
+      videoWorkPath("03-girlhood-dreamcore", `asset-${String(index).padStart(2, "0")}.webp`),
     ),
   },
 ];

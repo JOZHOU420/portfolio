@@ -28,6 +28,13 @@ const heroCards = [
 
 const carouselSlots = [-2, -1, 0, 1, 2] as const;
 
+const gearStickers = [
+  { src: "/images/gear/fujifilm-xm5.png", alt: "富士 X-M5 相机贴纸", className: "gear-sticker--xm5", rotation: -7, initialX: 0, initialY: 0 },
+  { src: "/images/gear/fujifilm-xs20.png", alt: "富士 X-S20 相机贴纸", className: "gear-sticker--xs20", rotation: 6, initialX: 0, initialY: 0 },
+  { src: "/images/gear/lens-35mm.png", alt: "35mm 镜头贴纸", className: "gear-sticker--lens", rotation: 11, initialX: 0, initialY: 0 },
+  { src: "/images/gear/instax-mini40.png", alt: "富士 instax mini 40 相机贴纸", className: "gear-sticker--mini40", rotation: -8, initialX: 0, initialY: 0 },
+];
+
 type HeroOffset = { x: number; y: number; rotate: number };
 type LightboxState = { project: number; image: number } | null;
 
@@ -43,6 +50,9 @@ function PortfolioMedia({
   muted = !controls,
   loop = !controls,
   draggable,
+  poster,
+  priority = false,
+  preload,
 }: {
   src: string;
   alt: string;
@@ -51,23 +61,63 @@ function PortfolioMedia({
   muted?: boolean;
   loop?: boolean;
   draggable?: boolean;
+  poster?: string;
+  priority?: boolean;
+  preload?: "none" | "metadata" | "auto";
 }) {
-  if (isVideo(src)) {
+  const mediaIsVideo = isVideo(src);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!mediaIsVideo || !autoPlay || !video) return;
+
+    const playVideo = () => {
+      void video.play().catch(() => undefined);
+    };
+
+    if (!("IntersectionObserver" in window)) {
+      playVideo();
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) playVideo();
+        else video.pause();
+      },
+      { rootMargin: "280px 0px", threshold: 0.01 },
+    );
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, [autoPlay, mediaIsVideo, src]);
+
+  if (mediaIsVideo) {
     return (
       <video
+        ref={videoRef}
         src={src}
+        poster={poster}
         aria-label={alt}
         controls={controls}
-        autoPlay={autoPlay}
         muted={muted}
         loop={loop}
         playsInline
-        preload="metadata"
+        preload={preload ?? (priority ? "metadata" : "none")}
       />
     );
   }
 
-  return <img src={src} alt={alt} draggable={draggable} />;
+  return (
+    <img
+      src={src}
+      alt={alt}
+      draggable={draggable}
+      loading={priority ? "eager" : "lazy"}
+      decoding="async"
+      fetchPriority={priority ? "high" : "auto"}
+    />
+  );
 }
 
 function BookPage({ page }: { page: Book["pages"][number] }) {
@@ -84,6 +134,296 @@ function BookPage({ page }: { page: Book["pages"][number] }) {
         fetchPriority="high"
       />
     </div>
+  );
+}
+
+function FloatingBalloon({
+  containerRef,
+}: {
+  containerRef: { current: HTMLDivElement | null };
+}) {
+  const balloonRef = useRef<HTMLButtonElement>(null);
+  const frameRef = useRef<number | null>(null);
+  const motionRef = useRef({
+    initialized: false,
+    dragging: false,
+    thrown: false,
+    x: 0,
+    y: 0,
+    vx: 0,
+    vy: 0,
+    angle: 0,
+    angularVelocity: 0,
+    grabX: 0,
+    grabY: 0,
+    lastPointerX: 0,
+    lastPointerY: 0,
+    lastPointerTime: 0,
+    lastFrameTime: 0,
+  });
+
+  useEffect(() => {
+    const animate = (time: number) => {
+      const balloon = balloonRef.current;
+      const container = containerRef.current;
+      if (!balloon || !container) {
+        frameRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
+      const motion = motionRef.current;
+      const containerWidth = container.clientWidth;
+      const containerHeight = container.clientHeight;
+      const balloonWidth = balloon.offsetWidth;
+      const balloonHeight = balloon.offsetHeight;
+      const sideSpace = Math.max(16, (window.innerWidth - containerWidth) / 2);
+      const hasOuterRoom = sideSpace > balloonWidth * 0.68;
+      const leftEdge = hasOuterRoom ? -balloonWidth - Math.min(34, sideSpace * 0.1) : 8;
+      const rightEdge = hasOuterRoom
+        ? containerWidth + Math.min(34, sideSpace * 0.1)
+        : containerWidth - balloonWidth - 8;
+
+      if (!motion.initialized) {
+        motion.initialized = true;
+        motion.x = leftEdge;
+        motion.y = containerHeight * 0.22;
+        motion.vx = 0.008;
+        motion.vy = -0.004;
+        motion.angle = -4;
+        motion.lastFrameTime = time;
+        balloon.style.opacity = "1";
+        balloon.style.pointerEvents = "auto";
+      }
+
+      const elapsed = Math.min(34, Math.max(1, time - motion.lastFrameTime));
+      motion.lastFrameTime = time;
+
+      if (!motion.dragging) {
+        if (motion.thrown) {
+          motion.vy -= 0.00012 * elapsed;
+          motion.vx *= Math.pow(0.999, elapsed / 16);
+          motion.vy *= Math.pow(0.999, elapsed / 16);
+          motion.x += motion.vx * elapsed;
+          motion.y += motion.vy * elapsed;
+          motion.angle += motion.angularVelocity * elapsed;
+
+          const isGone =
+            motion.x < -balloonWidth * 1.15 ||
+            motion.x > containerWidth + sideSpace + balloonWidth * 0.15 ||
+            motion.y < -balloonHeight * 1.15 ||
+            motion.y > containerHeight + balloonHeight * 0.15;
+          if (isGone) {
+            balloon.style.opacity = "0";
+            balloon.style.pointerEvents = "none";
+          }
+        } else {
+          const phase = (time % 60000) / 60000;
+          const ease = (value: number) => value * value * (3 - 2 * value);
+          let targetX = leftEdge;
+          if (phase >= 0.38 && phase < 0.45) {
+            const progress = ease((phase - 0.38) / 0.07);
+            targetX = leftEdge + (rightEdge - leftEdge) * progress;
+          } else if (phase >= 0.45 && phase < 0.88) {
+            targetX = rightEdge;
+          } else if (phase >= 0.88 && phase < 0.95) {
+            const progress = ease((phase - 0.88) / 0.07);
+            targetX = rightEdge + (leftEdge - rightEdge) * progress;
+          }
+          targetX += Math.sin(time / 5200) * 18;
+          const targetY = containerHeight * (0.2 + (Math.cos(time / 13500) + 1) * 0.25);
+          motion.vx += (targetX - motion.x) * 0.0000018 * elapsed;
+          motion.vy += (targetY - motion.y) * 0.0000015 * elapsed;
+          motion.vx += Math.sin(time / 2400) * 0.00016 * elapsed;
+          motion.vy += Math.cos(time / 2800) * 0.00012 * elapsed;
+          motion.vx *= Math.pow(0.986, elapsed / 16);
+          motion.vy *= Math.pow(0.986, elapsed / 16);
+          motion.x += motion.vx * elapsed;
+          motion.y += motion.vy * elapsed;
+          motion.angle = Math.sin(time / 2600) * 5 + motion.vx * 3;
+        }
+      }
+
+      balloon.style.transform = `translate3d(${motion.x}px, ${motion.y}px, 0) rotate(${motion.angle}deg)`;
+      frameRef.current = requestAnimationFrame(animate);
+    };
+
+    frameRef.current = requestAnimationFrame(animate);
+    return () => {
+      if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
+    };
+  }, [containerRef]);
+
+  const beginDrag = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const container = containerRef.current;
+    if (!container) return;
+    const motion = motionRef.current;
+    const bounds = container.getBoundingClientRect();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    event.preventDefault();
+    motion.dragging = true;
+    motion.thrown = false;
+    motion.grabX = event.clientX - bounds.left - motion.x;
+    motion.grabY = event.clientY - bounds.top - motion.y;
+    motion.lastPointerX = event.clientX;
+    motion.lastPointerY = event.clientY;
+    motion.lastPointerTime = event.timeStamp;
+    motion.vx = 0;
+    motion.vy = 0;
+    event.currentTarget.style.opacity = "1";
+  };
+
+  const dragBalloon = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const container = containerRef.current;
+    const motion = motionRef.current;
+    if (!container || !motion.dragging) return;
+    const bounds = container.getBoundingClientRect();
+    const elapsed = Math.max(8, event.timeStamp - motion.lastPointerTime);
+    motion.x = event.clientX - bounds.left - motion.grabX;
+    motion.y = event.clientY - bounds.top - motion.grabY;
+    motion.vx = (event.clientX - motion.lastPointerX) / elapsed;
+    motion.vy = (event.clientY - motion.lastPointerY) / elapsed;
+    motion.angularVelocity = motion.vx * 0.045;
+    motion.angle += motion.vx * 2.2;
+    motion.lastPointerX = event.clientX;
+    motion.lastPointerY = event.clientY;
+    motion.lastPointerTime = event.timeStamp;
+  };
+
+  const releaseBalloon = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const motion = motionRef.current;
+    if (!motion.dragging) return;
+    motion.dragging = false;
+    motion.thrown = Math.hypot(motion.vx, motion.vy) > 0.38;
+    if (motion.thrown) {
+      motion.vx *= 1.45;
+      motion.vy *= 1.45;
+    }
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+  };
+
+  const recallBalloon = () => {
+    const motion = motionRef.current;
+    motion.initialized = false;
+    motion.dragging = false;
+    motion.thrown = false;
+  };
+
+  return (
+    <button
+      className="floating-balloon"
+      ref={balloonRef}
+      type="button"
+      aria-label="可拖动的气球头。快速甩动可将它扔出画面，双击可召回。"
+      title="拖动并甩出去 · 双击召回"
+      onPointerDown={beginDrag}
+      onPointerMove={dragBalloon}
+      onPointerUp={releaseBalloon}
+      onPointerCancel={releaseBalloon}
+      onDoubleClick={recallBalloon}
+    >
+      <img src="/images/balloon-head-transparent.png" alt="" draggable={false} aria-hidden="true" />
+    </button>
+  );
+}
+
+function DraggableGearSticker({
+  src,
+  alt,
+  className,
+  rotation,
+  initialX,
+  initialY,
+}: {
+  src: string;
+  alt: string;
+  className: string;
+  rotation: number;
+  initialX: number;
+  initialY: number;
+}) {
+  const stickerRef = useRef<HTMLButtonElement>(null);
+  const motionRef = useRef({
+    dragging: false,
+    x: initialX,
+    y: initialY,
+    startX: 0,
+    startY: 0,
+    originX: 0,
+    originY: 0,
+  });
+
+  const renderPosition = (element: HTMLButtonElement) => {
+    const motion = motionRef.current;
+    element.style.setProperty("--gear-x", `${motion.x}px`);
+    element.style.setProperty("--gear-y", `${motion.y}px`);
+  };
+
+  const beginDrag = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const motion = motionRef.current;
+    event.preventDefault();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    event.currentTarget.classList.add("is-dragging");
+    motion.dragging = true;
+    motion.startX = event.clientX;
+    motion.startY = event.clientY;
+    motion.originX = motion.x;
+    motion.originY = motion.y;
+  };
+
+  const dragSticker = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const motion = motionRef.current;
+    if (!motion.dragging) return;
+    motion.x = motion.originX + event.clientX - motion.startX;
+    motion.y = motion.originY + event.clientY - motion.startY;
+    renderPosition(event.currentTarget);
+  };
+
+  const releaseSticker = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const motion = motionRef.current;
+    motion.dragging = false;
+    event.currentTarget.classList.remove("is-dragging");
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+  };
+
+  const nudgeSticker = (event: ReactKeyboardEvent<HTMLButtonElement>) => {
+    const offsets: Record<string, [number, number]> = {
+      ArrowLeft: [-10, 0],
+      ArrowRight: [10, 0],
+      ArrowUp: [0, -10],
+      ArrowDown: [0, 10],
+    };
+    const offset = offsets[event.key];
+    if (!offset) return;
+    event.preventDefault();
+    motionRef.current.x += offset[0];
+    motionRef.current.y += offset[1];
+    renderPosition(event.currentTarget);
+  };
+
+  return (
+    <button
+      className={`gear-sticker ${className}`}
+      ref={stickerRef}
+      type="button"
+      aria-label={`${alt}，可以拖动`}
+      title="拖动摆放"
+      style={{
+        "--gear-x": `${initialX}px`,
+        "--gear-y": `${initialY}px`,
+        "--gear-rotation": `${rotation}deg`,
+      } as CSSProperties}
+      onPointerDown={beginDrag}
+      onPointerMove={dragSticker}
+      onPointerUp={releaseSticker}
+      onPointerCancel={releaseSticker}
+      onKeyDown={nudgeSticker}
+    >
+      <img src={src} alt="" draggable={false} aria-hidden="true" />
+    </button>
   );
 }
 
@@ -113,6 +453,7 @@ export default function Home() {
   } | null>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
   const bookSwipeStart = useRef<number | null>(null);
+  const projectGridRef = useRef<HTMLDivElement>(null);
 
   const hasOverlay = Boolean(lightbox) || activeBook !== null || resumeOpen;
 
@@ -323,14 +664,14 @@ export default function Home() {
                 } as CSSProperties
               }
             >
-              <PortfolioMedia src={card.src} alt={card.alt} draggable={false} />
+              <PortfolioMedia src={card.src} alt={card.alt} draggable={false} priority={index < 2} />
               <span>0{index + 1}</span>
             </button>
           ))}
           <button className="shuffle-note" type="button" onClick={shuffleHero}>
-            Rearrange
+            点击
             <br />
-            the edit ↗
+            点击 ↗
           </button>
         </div>
 
@@ -360,7 +701,7 @@ export default function Home() {
       <section className="work-section" id="work" aria-labelledby="work-title">
         <div className="project-index project-index--lead" aria-label="Project index">
           <p className="section-label">INDEX / HOVER TO PREVIEW</p>
-          <p className="index-intro">从日常取景，也让想象开始流动。</p>
+          <p className="index-intro">DIRECTORY</p>
 
           <div className="index-part">
             <div className="index-part-heading">
@@ -418,16 +759,11 @@ export default function Home() {
                 ))}
               </div>
               <figure className="index-preview index-preview--video">
-                <video
+                <PortfolioMedia
                   key={videoWorks[videoIndexHover].videos[0].src}
                   src={videoWorks[videoIndexHover].videos[0].src}
                   poster={videoWorks[videoIndexHover].videos[0].poster}
-                  aria-label={`${videoWorks[videoIndexHover].title} preview`}
-                  muted
-                  autoPlay
-                  loop
-                  playsInline
-                  preload="metadata"
+                  alt={`${videoWorks[videoIndexHover].title} preview`}
                 />
                 <figcaption>{videoWorks[videoIndexHover].summary}</figcaption>
               </figure>
@@ -445,7 +781,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="project-grid">
+        <div className="project-grid" ref={projectGridRef}>
           {projects.map((project, projectIndex) => (
             <article
               className={`project-card project-card--${projectIndex + 1}`}
@@ -471,9 +807,15 @@ export default function Home() {
               </div>
             </article>
           ))}
+          {gearStickers.map((sticker) => (
+            <DraggableGearSticker key={sticker.src} {...sticker} />
+          ))}
+          <FloatingBalloon containerRef={projectGridRef} />
         </div>
 
       </section>
+
+      <div className="work-video-transition" aria-hidden="true" />
 
       <section className="video-section" aria-labelledby="video-work-title">
         <header className="video-section-heading">
@@ -507,13 +849,11 @@ export default function Home() {
               <div className="video-work-stage">
                 {work.videos.map((video, videoIndex) => (
                   <figure key={video.src}>
-                    <video
+                    <PortfolioMedia
                       src={video.src}
                       poster={video.poster}
-                      aria-label={video.label}
+                      alt={video.label}
                       controls
-                      playsInline
-                      preload="metadata"
                     />
                     {work.videos.length > 1 && (
                       <figcaption>Scene {String(videoIndex + 1).padStart(2, "0")}</figcaption>
@@ -576,7 +916,7 @@ export default function Home() {
           <div className="about-copy">
             <p>
             Raina / 周小雨是一名 AI 产品经理，专注视觉 / 图像内容及 AI 应用，
-            工作横跨产品策略、多模态体验、视觉内容与快速原型。
+            工作横跨产品策略、多模态体验、视觉内容。
             </p>
             <p className="contact-details">
               <span>电话 / 微信</span>
@@ -647,6 +987,7 @@ export default function Home() {
                       autoPlay={slot === 0}
                       muted
                       loop
+                      priority={slot === 0}
                     />
                   </figure>
                 );
