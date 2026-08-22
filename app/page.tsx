@@ -688,7 +688,7 @@ export default function Home() {
           useful and ready for people to explore.
         </p>
         <p className="manifesto-copy-zh">
-          我热爱摄影、审美与图像创作，也希望打造真正实用、人人都能轻松探索的视觉智能 AI 产品。
+          我热爱摄影、绘画、AI创作等视觉表达方式,也希望打造人人都能轻松打造的AI视觉产品.
         </p>
         <div className="ticker" aria-hidden="true">
           <div>
@@ -855,6 +855,10 @@ export default function Home() {
                       alt={video.label}
                       controls
                     />
+                    <div className="video-rotate-prompt" role="img" aria-label="请旋转手机横屏观看视频">
+                      <span className="video-rotate-orbit" aria-hidden="true" />
+                      <span className="video-rotate-device" aria-hidden="true" />
+                    </div>
                     {work.videos.length > 1 && (
                       <figcaption>Scene {String(videoIndex + 1).padStart(2, "0")}</figcaption>
                     )}

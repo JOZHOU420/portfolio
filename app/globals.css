@@ -394,12 +394,14 @@ img {
 }
 
 .manifesto-copy-zh {
-  width: min(680px, 72vw);
+  width: max-content;
+  max-width: 92vw;
   margin: -76px auto 0;
-  font-size: clamp(14px, 1.35vw, 21px);
+  font-size: clamp(13px, 1.15vw, 18px);
   line-height: 1.55;
   letter-spacing: 0.015em;
   color: rgb(245 242 235 / 0.76);
+  white-space: nowrap;
 }
 
 .ticker {
@@ -796,7 +798,7 @@ img {
 
 .project-index--lead {
   margin-top: 0;
-  margin-bottom: 20vh;
+  margin-bottom: 6vh;
 }
 
 .index-intro {
@@ -938,6 +940,10 @@ img {
   border-color: rgb(244 242 235 / 0.34);
 }
 
+.index-part--video .index-row span:nth-child(3) {
+  white-space: nowrap;
+}
+
 .index-part--video .index-row:last-child {
   border-color: rgb(244 242 235 / 0.34);
 }
@@ -1062,6 +1068,11 @@ img {
   letter-spacing: -0.07em;
 }
 
+.video-work--1 .video-work-copy h3 {
+  font-size: clamp(34px, 3.65vw, 68px);
+  line-height: 0.88;
+}
+
 .video-work-copy h3 span,
 .video-work-copy h3 em {
   display: block;
@@ -1110,6 +1121,10 @@ img {
   margin: 0;
 }
 
+.video-rotate-prompt {
+  display: none;
+}
+
 .video-work-stage video {
   display: block;
   width: 100%;
@@ -1130,7 +1145,9 @@ img {
   width: min(100%, 1120px);
   grid-template-columns: 1fr;
   gap: clamp(20px, 2.2vw, 36px);
+  align-self: end;
   justify-self: end;
+  transform: translateY(clamp(18px, 1.35vw, 34px));
 }
 
 .video-work-stage figcaption {
@@ -2029,7 +2046,7 @@ footer div {
   .scroll-cue { display: none; }
   .manifesto, .work-section, .video-section, .books-section, .about-section, footer { padding-right: 16px; padding-left: 16px; }
   .manifesto-copy { margin-top: 18vh; font-size: 11.8vw; }
-  .manifesto-copy-zh { width: min(620px, 84vw); margin-top: -72px; }
+  .manifesto-copy-zh { max-width: 92vw; margin-top: -72px; font-size: 13px; }
   .section-heading, .books-heading { grid-template-columns: 1fr; }
   .section-heading h2, .books-heading h2 { grid-column: 1; margin-top: 8vh; }
   .books-heading > p:last-child { grid-column: 1; }
@@ -2082,7 +2099,12 @@ footer div {
   }
   .video-work-tools { margin-top: 0; }
   .video-work-stage { gap: 14px; }
-  .video-work--split .video-work-stage { width: 100%; justify-self: stretch; }
+  .video-work--split .video-work-stage {
+    width: 100%;
+    align-self: start;
+    justify-self: stretch;
+    transform: none;
+  }
   .video-work--split .video-work-stage video { aspect-ratio: 2.45 / 1; }
   .video-assets figure { height: clamp(180px, 32vw, 260px); }
   .book-shelf { gap: 16px; width: 100%; }
@@ -2098,6 +2120,98 @@ footer div {
   .resume-columns section { grid-template-columns: 90px 1fr; }
 }
 
+@keyframes rotate-device-hint {
+  0%, 24% { transform: rotate(0deg); }
+  68%, 100% { transform: rotate(-90deg); }
+}
+
+@keyframes rotate-orbit-hint {
+  0%, 24% { transform: rotate(-42deg); opacity: 0.48; }
+  68%, 100% { transform: rotate(-132deg); opacity: 1; }
+}
+
+@media (max-width: 900px) and (orientation: portrait) and (hover: none) and (pointer: coarse) {
+  .video-rotate-prompt {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: clamp(10px, 1vw, 18px);
+    background: rgb(8 9 8 / 0.68);
+    backdrop-filter: blur(4px);
+    pointer-events: none;
+  }
+
+  .video-rotate-orbit {
+    position: absolute;
+    width: 76px;
+    height: 76px;
+    border: 2px solid transparent;
+    border-top-color: #d8ff26;
+    border-right-color: #d8ff26;
+    border-radius: 50%;
+    animation: rotate-orbit-hint 2.4s ease-in-out infinite alternate;
+  }
+
+  .video-rotate-orbit::after {
+    position: absolute;
+    top: 5px;
+    right: 4px;
+    width: 8px;
+    height: 8px;
+    border-top: 2px solid #d8ff26;
+    border-right: 2px solid #d8ff26;
+    content: "";
+    transform: rotate(26deg);
+  }
+
+  .video-rotate-device {
+    position: relative;
+    display: block;
+    width: 24px;
+    height: 40px;
+    flex: 0 0 auto;
+    border: 2px solid #d8ff26;
+    border-radius: 5px;
+    box-shadow: 0 0 28px rgb(216 255 38 / 0.24);
+    animation: rotate-device-hint 2.4s ease-in-out infinite alternate;
+  }
+
+  .video-rotate-device::after {
+    position: absolute;
+    bottom: 3px;
+    left: 50%;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #d8ff26;
+    content: "";
+    transform: translateX(-50%);
+  }
+
+  .video-work-stage figcaption {
+    z-index: 3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .video-rotate-device,
+  .video-rotate-orbit {
+    animation: none;
+  }
+
+  .video-rotate-device {
+    transform: rotate(-90deg);
+  }
+
+  .video-rotate-orbit {
+    opacity: 1;
+    transform: rotate(-132deg);
+  }
+}
+
 @media (max-width: 620px) {
   .floating-balloon {
     display: none;
@@ -2106,7 +2220,7 @@ footer div {
   .site-header nav a:nth-child(2) { display: none; }
   .manifesto { min-height: 80svh; }
   .manifesto-copy { margin-bottom: 100px; }
-  .manifesto-copy-zh { width: 92%; margin-top: -72px; font-size: 13px; }
+  .manifesto-copy-zh { max-width: calc(100vw - 32px); margin-top: -72px; font-size: clamp(7px, 2vw, 13px); letter-spacing: 0; }
   .index-intro { width: calc(100% - 20px); margin: 8vh auto 0; font-size: 9vw; line-height: 0.74; }
   .index-part { margin-top: 10vh; }
   .index-part + .index-part { margin-top: 12vh; }
@@ -2137,6 +2251,7 @@ footer div {
   .video-section-heading h2 { font-size: 14.5vw; }
   .video-projects { margin-top: 11vh; }
   .video-work-copy h3 { font-size: 13vw; }
+  .video-work--1 .video-work-copy h3 { font-size: 11vw; }
   .video-work-about { margin-top: 44px; }
   .video-work-about p, .video-work-tools p { font-size: 14px; line-height: 1.65; }
   .video-assets figure { height: min(58vw, 230px); }
